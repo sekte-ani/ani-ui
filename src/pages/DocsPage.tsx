@@ -1,12 +1,27 @@
 import { useEffect, useRef, useState } from "react"
 import { ChevronRightIcon, SearchIcon, XIcon } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { FoundationDoc } from "@/docs/foundation"
+
 import { AtomsDoc } from "@/docs/atoms"
 import { MoleculesDoc } from "@/docs/molecules"
 import { OrganismsDoc } from "@/docs/organisms"
 
 // Only items that have a real section rendered in the content area
 const NAV_GROUPS = [
+  {
+    label: "Foundation",
+    items: [
+      "Color Palette",
+      "Typography ",
+      "Spacing",
+      "Border Radius",
+      "Grid System",
+      "Shadow",
+      "Icon Style",
+    ],
+
+  },
   {
     label: "Atoms",
     items: [
@@ -85,7 +100,7 @@ export function DocsPage() {
   const [openGroups, setOpenGroups] = useState<Record<string, boolean>>(
     Object.fromEntries(NAV_GROUPS.map((g) => [g.label, true]))
   )
-  const [activeItem, setActiveItem] = useState<string>("Button")
+  const [activeItem, setActiveItem] = useState<string>("Color Palette")
   const [search, setSearch] = useState("")
 
   const q = search.trim().toLowerCase()
@@ -237,6 +252,7 @@ export function DocsPage() {
             Dokumentasi design system berbasis shadcn/ui — dibangun dengan Atomic Design.
           </p>
           <div className="mt-10">
+            <FoundationDoc />
             <AtomsDoc />
             <MoleculesDoc />
             <OrganismsDoc />
