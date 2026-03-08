@@ -1,73 +1,111 @@
-# React + TypeScript + Vite
+# ANI UI (`@ani-ui/anis`)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A Tailwind v4-based React design system library featuring shadcn-style components and hooks.
 
-Currently, two official plugins are available:
+## Publishing the Library
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Whenever you update the design system, make sure to bump the version in `package.json` first. Then run:
 
-## React Compiler
-
-The React Compiler is currently not compatible with SWC. See [this issue](https://github.com/vitejs/vite-plugin-react/issues/428) for tracking the progress.
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm run build
+npm pack
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+This will generate a `.tgz` file in the root directory. You can use this file to install the library in any project.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Using in a Project
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+1. Make sure Tailwind CSS is installed in your project.
+2. Copy the `.tgz` file into the project's root directory.
+3. Add the following to your `package.json` dependencies:
+
+```json
+{
+  "dependencies": {
+    "@ani-ui/anis": "file:ani-ui-anis-1.0.0.tgz",
+    "@tailwindcss/postcss": "^4.2.1",
+    "tailwind-merge": "^3.5.0",
+    "tailwindcss": "^4.2.1"
+  }
+}
 ```
+
+4. Clean up existing artifacts:
+
+```bash
+rm -rf node_modules .next package-lock.json
+```
+
+5. Reinstall dependencies:
+
+```bash
+npm install
+```
+
+6. Import and use the components:
+
+```tsx
+import { Button } from "@ani-ui/anis";
+
+<Button>Click me</Button>;
+```
+
+# For now, don't follow this one.
+
+## Requirements
+
+- `react` `^18 || ^19`
+- `react-dom` `^18 || ^19`
+- `tailwindcss` `^4`
+
+## Install
+
+```bash
+npm install @ani-ui/anis
+```
+
+## Consumer Setup
+
+1. Import library styles in your global stylesheet:
+
+```css
+@import "tailwindcss";
+@import "@ani-ui/anis/styles.css";
+
+/* Adjust the relative path based on your project structure */
+@source "../node_modules/@ani-ui/anis/dist/**/*.js";
+```
+
+2. Use components:
+
+```tsx
+import { Button, Dialog, DialogContent, DialogTrigger } from "@ani-ui/anis";
+```
+
+## Next.js (App Router)
+
+Interactive components and hooks should be imported from the client entry:
+
+```tsx
+"use client";
+
+import { Button, useIsMobile } from "@ani-ui/anis/client";
+```
+
+You can still import SSR-safe exports from `@ani-ui/anis`, but `@ani-ui/anis/client` is the safe default in Next client components.
+
+## Laravel + Inertia (React)
+
+When using the Vite stack, add the same global CSS imports and `@source` line in your app stylesheet, then import components from `@ani-ui/anis`.
+
+## Build This Library
+
+```bash
+npm run build
+```
+
+Output is generated in `dist/`:
+
+- ESM modules (`.js`)
+- Type declarations (`.d.ts`)
+- Theme/styles entry (`styles.css`)
