@@ -1,10 +1,11 @@
 import { useState } from "react"
 import { CheckIcon, CopyIcon } from "lucide-react"
-import { ColorPaletteSection } from "@/components/foundation/color-palette"
-import { SpacingSection } from "@/components/foundation/spacing"
-import { BorderRadiusSection } from "@/components/foundation/border-radius"
+import { ColorPalette } from "@/components/ui/color-palette"
+import { SpacingScale } from "@/components/ui/spacing"
+import { BorderRadiusSection } from "@/components/ui/border-radius"
 import { GridSystemSection } from "@/components/foundation/grid-systems"
-import { ShadowSection } from "@/components/foundation/shadow"
+import { ShadowSection } from "@/components/ui/shadow"
+import { TextShadowSection } from "@/components/ui/text-shadow"
 import { IconStyleSection } from "@/components/foundation/icon-style"
 import { ComponentSection } from "@/docs/components/ComponentSection"
 import {
@@ -73,6 +74,12 @@ export function FoundationSection({
 
 const SHARED_HEADING_PROPS = [
   {
+    prop: "color",
+    type: '"primary" | "secondary" | "info" | "success" | "warning" | "error" | "black" | "white"',
+    default: "—",
+    description: "Warna teks dari token warna styleguide",
+  },
+  {
     prop: "as",
     type: "React.ElementType",
     default: "h1 / h2 / h3 / h4",
@@ -98,6 +105,12 @@ const SHARED_TEXT_PROPS = [
     type: '"regular" | "bold"',
     default: '"regular"',
     description: "Ketebalan font — regular (400) atau bold (700)",
+  },
+  {
+    prop: "color",
+    type: '"primary" | "secondary" | "info" | "success" | "warning" | "error" | "black" | "white"',
+    default: "—",
+    description: "Warna teks dari token warna styleguide",
   },
   {
     prop: "as",
@@ -257,12 +270,25 @@ function TypographyDoc() {
 export function FoundationDoc() {
   return (
     <div>
-      <ColorPaletteSection />
+      <FoundationSection
+        id="color-palette"
+        title="Color Palette"
+        description="Token warna brand, status, dan netral. Klik swatch untuk menyalin nilai hex."
+      >
+        <ColorPalette />
+      </FoundationSection>
       <TypographyDoc />
-      <SpacingSection />
+      <FoundationSection
+        id="spacing"
+        title="Spacing"
+        description="Skala spasi yang digunakan secara konsisten untuk margin, padding, dan gap di seluruh komponen."
+      >
+        <SpacingScale />
+      </FoundationSection>
       <BorderRadiusSection />
       <GridSystemSection />
       <ShadowSection />
+      <TextShadowSection />
       <IconStyleSection />
     </div>
   )
