@@ -76,6 +76,45 @@ export const bgColorClassMap: Record<ColorToken, string> = {
   white:     "bg-brand-white",
 }
 
+// ── Foreground text class (readable on the corresponding brand bg) ────────────
+
+export const fgOnBrandBgClass: Record<ColorToken, string> = {
+  primary:   "text-white",
+  secondary: "text-gray-700",
+  info:      "text-gray-700",
+  success:   "text-white",
+  warning:   "text-white",
+  error:     "text-white",
+  black:     "text-white",
+  white:     "text-gray-700",
+}
+
+// ── Tailwind border-color class map ───────────────────────────────────────────
+
+export const borderColorClassMap: Record<ColorToken, string> = {
+  primary:   "border-brand-primary",
+  secondary: "border-brand-secondary",
+  info:      "border-brand-info",
+  success:   "border-brand-success",
+  warning:   "border-brand-warning",
+  error:     "border-brand-error",
+  black:     "border-brand-black",
+  white:     "border-brand-white",
+}
+
+// ── Tailwind fill class map (SVG icons) ───────────────────────────────────────
+
+export const fillColorClassMap: Record<ColorToken, string> = {
+  primary:   "fill-brand-primary",
+  secondary: "fill-brand-secondary",
+  info:      "fill-brand-info",
+  success:   "fill-brand-success",
+  warning:   "fill-brand-warning",
+  error:     "fill-brand-error",
+  black:     "fill-brand-black",
+  white:     "fill-brand-white",
+}
+
 // ── Detailed color spec (used by swatches / palette display) ──────────────────
 
 export interface ColorSpec {

@@ -3,6 +3,12 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { Slot } from "radix-ui";
 
 import { cn } from "@/lib/utils";
+import {
+  type ColorToken,
+  bgColorClassMap,
+  fgOnBrandBgClass,
+  colorClassMap,
+} from "@/components/ui/color-palette.variants";
 
 const buttonVariants = cva(
   "inline-flex shrink-0 items-center justify-center gap-2 rounded-md text-sm font-medium whitespace-nowrap transition-all outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
@@ -42,20 +48,30 @@ function Button({
   className,
   variant = "default",
   size = "default",
+  color,
   asChild = false,
   ...props
 }: React.ComponentProps<"button"> &
   VariantProps<typeof buttonVariants> & {
     asChild?: boolean;
+    color?: ColorToken;
   }) {
   const Comp = asChild ? Slot.Root : "button";
+
+  // When color is set, override bg/text with brand palette.
+  // For "link" and "ghost" variants, apply text color only.
+  const brandClasses = color
+    ? variant === "link" || variant === "ghost"
+      ? colorClassMap[color]
+      : `${bgColorClassMap[color]} ${fgOnBrandBgClass[color]} hover:opacity-90`
+    : undefined;
 
   return (
     <Comp
       data-slot="button"
       data-variant={variant}
       data-size={size}
-      className={cn(buttonVariants({ variant, size, className }))}
+      className={cn(buttonVariants({ variant, size }), brandClasses, className)}
       {...props}
     />
   );

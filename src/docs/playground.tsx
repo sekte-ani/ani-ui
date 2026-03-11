@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { CheckIcon, CopyIcon } from "lucide-react"
+import { CheckIcon, CopyIcon, BoldIcon } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { hexColorMap, colorClassMap, bgColorClassMap, COLOR_TOKENS, type ColorToken } from "@/components/ui/color-palette.variants"
 import { type TrackingToken } from "@/components/ui/spacing.variants"
@@ -17,7 +17,16 @@ import {
   SmallText,
 } from "@/components/ui/typography"
 import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Checkbox } from "@/components/ui/checkbox"
 import { Input } from "@/components/ui/input"
+import { Kbd } from "@/components/ui/kbd"
+import { Label } from "@/components/ui/label"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import { Slider } from "@/components/ui/slider"
+import { Spinner } from "@/components/ui/spinner"
+import { Switch } from "@/components/ui/switch"
+import { Toggle } from "@/components/ui/toggle"
 
 // ── Typography Constants ──────────────────────────────────────────────────────
 
@@ -550,6 +559,274 @@ function ElementPlayground() {
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
+// ── Atoms Playground ──────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════════════════════
+
+const BUTTON_VARIANTS = ["default", "secondary", "outline", "ghost", "link", "destructive"] as const
+const BADGE_VARIANTS  = ["default", "secondary", "outline", "ghost", "link", "destructive"] as const
+
+function AtomsPlayground() {
+  const [color, setColor] = useState<ColorToken | "none">("none")
+  const [buttonVariant, setButtonVariant] = useState<(typeof BUTTON_VARIANTS)[number]>("default")
+  const [badgeVariant, setBadgeVariant]   = useState<(typeof BADGE_VARIANTS)[number]>("default")
+
+  // ── derived values ──
+  const colorProp = color !== "none" ? color : undefined
+  const colorAttr = color !== "none" ? ` color="${color}"` : ""
+  const bv = buttonVariant
+  const bav = badgeVariant
+
+  const snippets = {
+    button: `import { Button } from "@/components/ui/button"
+
+<Button${colorAttr}${bv !== "default" ? ` variant="${bv}"` : ""}>Click me</Button>
+<Button${colorAttr}${bv !== "default" ? ` variant="${bv}"` : ""} size="sm">Small</Button>
+<Button${colorAttr}${bv !== "default" ? ` variant="${bv}"` : ""} size="lg">Large</Button>`,
+
+    badge: `import { Badge } from "@/components/ui/badge"
+
+<Badge${colorAttr}${bav !== "default" ? ` variant="${bav}"` : ""}>Label</Badge>`,
+
+    label: `import { Label } from "@/components/ui/label"
+
+<Label${colorAttr}>Form field label</Label>`,
+
+    checkbox: `import { Checkbox } from "@/components/ui/checkbox"
+
+<Checkbox${colorAttr} defaultChecked />
+<Checkbox${colorAttr} />`,
+
+    switch_: `import { Switch } from "@/components/ui/switch"
+
+<Switch${colorAttr} defaultChecked />
+<Switch${colorAttr} size="sm" defaultChecked />`,
+
+    toggle: `import { Toggle } from "@/components/ui/toggle"
+
+<Toggle${colorAttr} defaultPressed>
+  <BoldIcon />
+</Toggle>
+<Toggle${colorAttr} variant="outline">
+  <BoldIcon />
+</Toggle>`,
+
+    slider: `import { Slider } from "@/components/ui/slider"
+
+<Slider${colorAttr} defaultValue={[40]} max={100} />
+<Slider${colorAttr} defaultValue={[20, 70]} max={100} />`,
+
+    spinner: `import { Spinner } from "@/components/ui/spinner"
+
+<Spinner${colorAttr} />
+<Spinner${colorAttr} className="size-6" />
+<Spinner${colorAttr} className="size-8" />`,
+
+    kbd: `import { Kbd } from "@/components/ui/kbd"
+
+<Kbd${colorAttr}>⌘</Kbd>
+<Kbd${colorAttr}>K</Kbd>`,
+
+    radioGroup: `import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+
+<RadioGroup defaultValue="opt-a">
+  <RadioGroupItem value="opt-a"${colorAttr} />
+  <RadioGroupItem value="opt-b"${colorAttr} />
+  <RadioGroupItem value="opt-c"${colorAttr} />
+</RadioGroup>`,
+  }
+
+  return (
+    <section id="atoms-playground" className="scroll-mt-8 py-10 border-b border-border last:border-b-0">
+      <div className="mb-6">
+        <div className="flex items-start gap-3">
+          <div className="flex-1">
+            <h2 className="text-xl font-semibold tracking-tight">Atoms Playground</h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Coba prop <code className="rounded bg-muted px-1 py-0.5 text-xs">color</code> pada setiap atom component. Pilih warna brand di bawah, lalu lihat hasilnya.
+            </p>
+          </div>
+          <Badge variant="outline" className="mt-1 shrink-0 font-mono text-xs">
+            Interactive
+          </Badge>
+        </div>
+      </div>
+
+      {/* ── Shared color selector ── */}
+      <div className="rounded-lg border border-border bg-muted/20 p-6 space-y-5">
+        <PillSelect
+          label="Brand Color"
+          options={COLOR_OPTIONS}
+          value={color}
+          onChange={setColor}
+          renderOption={renderColorOption}
+        />
+
+        <PillSelect
+          label="Button Variant"
+          options={BUTTON_VARIANTS}
+          value={buttonVariant}
+          onChange={setButtonVariant}
+        />
+
+        <PillSelect
+          label="Badge Variant"
+          options={BADGE_VARIANTS}
+          value={badgeVariant}
+          onChange={setBadgeVariant}
+        />
+      </div>
+
+      {/* ── Component Grid ── */}
+      <div className="mt-6 grid gap-8 sm:grid-cols-2">
+
+        {/* Button */}
+        <div className="space-y-3">
+          <AtomCard title="Button">
+            <div className="flex flex-wrap gap-2">
+              <Button color={colorProp} variant={buttonVariant}>Click me</Button>
+              <Button color={colorProp} variant={buttonVariant} size="sm">Small</Button>
+              <Button color={colorProp} variant={buttonVariant} size="lg">Large</Button>
+            </div>
+          </AtomCard>
+          <PlaygroundCodeBlock code={snippets.button} />
+        </div>
+
+        {/* Badge */}
+        <div className="space-y-3">
+          <AtomCard title="Badge">
+            <div className="flex flex-wrap gap-2">
+              <Badge color={colorProp} variant={badgeVariant}>Label</Badge>
+              <Badge color={colorProp} variant={badgeVariant}>Status</Badge>
+              <Badge color={colorProp} variant={badgeVariant}>New</Badge>
+            </div>
+          </AtomCard>
+          <PlaygroundCodeBlock code={snippets.badge} />
+        </div>
+
+        {/* Label */}
+        <div className="space-y-3">
+          <AtomCard title="Label">
+            <Label color={colorProp}>Form field label</Label>
+          </AtomCard>
+          <PlaygroundCodeBlock code={snippets.label} />
+        </div>
+
+        {/* Checkbox */}
+        <div className="space-y-3">
+          <AtomCard title="Checkbox">
+            <div className="flex items-center gap-3">
+              <Checkbox id="cb-demo" color={colorProp} defaultChecked />
+              <Label htmlFor="cb-demo">Checked</Label>
+            </div>
+            <div className="flex items-center gap-3 mt-2">
+              <Checkbox id="cb-demo-2" color={colorProp} />
+              <Label htmlFor="cb-demo-2">Unchecked</Label>
+            </div>
+          </AtomCard>
+          <PlaygroundCodeBlock code={snippets.checkbox} />
+        </div>
+
+        {/* Switch */}
+        <div className="space-y-3">
+          <AtomCard title="Switch">
+            <div className="flex items-center gap-3">
+              <Switch id="sw-demo" color={colorProp} defaultChecked />
+              <Label htmlFor="sw-demo">Enabled</Label>
+            </div>
+            <div className="flex items-center gap-3 mt-2">
+              <Switch id="sw-demo-sm" color={colorProp} size="sm" defaultChecked />
+              <Label htmlFor="sw-demo-sm">Small</Label>
+            </div>
+          </AtomCard>
+          <PlaygroundCodeBlock code={snippets.switch_} />
+        </div>
+
+        {/* Toggle */}
+        <div className="space-y-3">
+          <AtomCard title="Toggle">
+            <div className="flex gap-2">
+              <Toggle color={colorProp} aria-label="Bold" defaultPressed>
+                <BoldIcon className="size-4" />
+              </Toggle>
+              <Toggle color={colorProp} variant="outline" aria-label="Bold outline">
+                <BoldIcon className="size-4" />
+              </Toggle>
+            </div>
+          </AtomCard>
+          <PlaygroundCodeBlock code={snippets.toggle} />
+        </div>
+
+        {/* Slider */}
+        <div className="space-y-3">
+          <AtomCard title="Slider">
+            <Slider color={colorProp} defaultValue={[40]} max={100} className="w-full" />
+            <Slider color={colorProp} defaultValue={[20, 70]} max={100} className="mt-4 w-full" />
+          </AtomCard>
+          <PlaygroundCodeBlock code={snippets.slider} />
+        </div>
+
+        {/* Spinner */}
+        <div className="space-y-3">
+          <AtomCard title="Spinner">
+            <div className="flex items-center gap-4">
+              <Spinner color={colorProp} />
+              <Spinner color={colorProp} className="size-6" />
+              <Spinner color={colorProp} className="size-8" />
+            </div>
+          </AtomCard>
+          <PlaygroundCodeBlock code={snippets.spinner} />
+        </div>
+
+        {/* Kbd */}
+        <div className="space-y-3">
+          <AtomCard title="Kbd">
+            <div className="flex items-center gap-2">
+              <Kbd color={colorProp}>⌘</Kbd>
+              <Kbd color={colorProp}>K</Kbd>
+              <span className="text-sm text-muted-foreground">Command Palette</span>
+            </div>
+          </AtomCard>
+          <PlaygroundCodeBlock code={snippets.kbd} />
+        </div>
+
+        {/* RadioGroup */}
+        <div className="space-y-3">
+          <AtomCard title="RadioGroup">
+            <RadioGroup defaultValue="opt-a">
+              <div className="flex items-center gap-2">
+                <RadioGroupItem value="opt-a" id="rg-a" color={colorProp} />
+                <Label htmlFor="rg-a">Option A</Label>
+              </div>
+              <div className="flex items-center gap-2">
+                <RadioGroupItem value="opt-b" id="rg-b" color={colorProp} />
+                <Label htmlFor="rg-b">Option B</Label>
+              </div>
+              <div className="flex items-center gap-2">
+                <RadioGroupItem value="opt-c" id="rg-c" color={colorProp} />
+                <Label htmlFor="rg-c">Option C</Label>
+              </div>
+            </RadioGroup>
+          </AtomCard>
+          <PlaygroundCodeBlock code={snippets.radioGroup} />
+        </div>
+
+      </div>
+    </section>
+  )
+}
+
+// ── Atom card wrapper ─────────────────────────────────────────────────────────
+
+function AtomCard({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <div className="rounded-lg border border-border bg-muted/10 p-5">
+      <h4 className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">{title}</h4>
+      {children}
+    </div>
+  )
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
 // ── Main Export ───────────────────────────────────────────────────────────────
 // ══════════════════════════════════════════════════════════════════════════════
 
@@ -558,6 +835,7 @@ export function PlaygroundDoc() {
     <div>
       <TypographyPlayground />
       <ElementPlayground />
+      <AtomsPlayground />
     </div>
   )
 }

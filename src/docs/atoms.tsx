@@ -50,6 +50,12 @@ export function AtomsDoc() {
             default: "false",
             description: "Nonaktifkan tombol",
           },
+          {
+            prop: "color",
+            type: '"primary" | "secondary" | "info" | "success" | "warning" | "error" | "black" | "white"',
+            default: "—",
+            description: "Override warna dengan brand color. Pada variant ghost/link hanya mengubah warna teks",
+          },
         ]}
         code={`import { Button } from "@/components/ui/button"
 
@@ -60,7 +66,13 @@ export function AtomsDoc() {
 <Button variant="ghost">Ghost</Button>
 <Button variant="link">Link</Button>
 <Button size="sm">Small</Button>
-<Button disabled>Disabled</Button>`}
+<Button disabled>Disabled</Button>
+
+{/* Brand color */}
+<Button color="primary">Primary</Button>
+<Button color="secondary">Secondary</Button>
+<Button color="primary" variant="outline">Primary Outline</Button>
+<Button color="secondary" variant="ghost">Secondary Ghost</Button>`}
       >
         <div className="flex flex-wrap gap-2 justify-center">
           <Button>Default</Button>
@@ -71,6 +83,10 @@ export function AtomsDoc() {
           <Button variant="link">Link</Button>
           <Button size="sm">Small</Button>
           <Button disabled>Disabled</Button>
+          <Button color="primary">Primary</Button>
+          <Button color="secondary">Secondary</Button>
+          <Button color="primary" variant="outline">Primary Outline</Button>
+          <Button color="secondary" variant="ghost">Secondary Ghost</Button>
         </div>
       </ComponentSection>
 
@@ -92,13 +108,23 @@ export function AtomsDoc() {
             default: "false",
             description: "Render sebagai slot komponen anak menggunakan Radix Slot",
           },
+          {
+            prop: "color",
+            type: '"primary" | "secondary" | "info" | "success" | "warning" | "error" | "black" | "white"',
+            default: "—",
+            description: "Override warna dengan brand color. Pada variant ghost/link hanya mengubah warna teks",
+          },
         ]}
         code={`import { Badge } from "@/components/ui/badge"
 
 <Badge>Default</Badge>
 <Badge variant="secondary">Secondary</Badge>
 <Badge variant="destructive">Destructive</Badge>
-<Badge variant="outline">Outline</Badge>`}
+<Badge variant="outline">Outline</Badge>
+
+{/* Brand color */}
+<Badge color="primary">Primary</Badge>
+<Badge color="secondary">Secondary</Badge>`}
       >
         <div className="flex flex-wrap gap-2 justify-center">
           <Badge>Default</Badge>
@@ -106,6 +132,10 @@ export function AtomsDoc() {
           <Badge variant="destructive">Destructive</Badge>
           <Badge variant="outline">Outline</Badge>
           <Badge variant="ghost">Ghost</Badge>
+          <Badge color="primary">Primary</Badge>
+          <Badge color="secondary">Secondary</Badge>
+          <Badge color="info">Info</Badge>
+          <Badge color="error">Error</Badge>
         </div>
       </ComponentSection>
 
@@ -167,6 +197,12 @@ export function AtomsDoc() {
             default: "—",
             description: "ID elemen form yang diasosiasikan dengan label ini",
           },
+          {
+            prop: "color",
+            type: '"primary" | "secondary" | "info" | "success" | "warning" | "error" | "black" | "white"',
+            default: "—",
+            description: "Warnai teks label dengan brand color",
+          },
         ]}
         code={`import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
@@ -174,11 +210,17 @@ import { Input } from "@/components/ui/input"
 <div className="grid gap-1.5">
   <Label htmlFor="email">Alamat Email</Label>
   <Input id="email" type="email" placeholder="email@contoh.com" />
-</div>`}
+</div>
+
+{/* Dengan brand color */}
+<Label color="primary">Label brand primary</Label>
+<Label color="secondary">Label brand secondary</Label>`}
       >
-        <div className="grid gap-1.5 w-full max-w-xs">
+        <div className="grid gap-3 w-full max-w-xs">
           <Label htmlFor="docs-email">Alamat Email</Label>
           <Input id="docs-email" type="email" placeholder="email@contoh.com" />
+          <Label color="primary">Label brand primary</Label>
+          <Label color="secondary">Label brand secondary</Label>
         </div>
       </ComponentSection>
 
@@ -299,6 +341,12 @@ import { AvatarGroup, AvatarGroupCount } from "@/components/ui/avatar"
             default: "false",
             description: "Tampilkan state error dengan border merah",
           },
+          {
+            prop: "color",
+            type: '"primary" | "secondary" | "info" | "success" | "warning" | "error" | "black" | "white"',
+            default: "—",
+            description: "Override warna centang dengan brand color",
+          },
         ]}
         code={`import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
@@ -312,7 +360,11 @@ import { Label } from "@/components/ui/label"
 <div className="flex items-center gap-2">
   <Checkbox id="disabled" disabled defaultChecked />
   <Label htmlFor="disabled">Opsi nonaktif</Label>
-</div>`}
+</div>
+
+{/* Brand color */}
+<Checkbox color="primary" defaultChecked />
+<Checkbox color="secondary" defaultChecked />`}
       >
         <div className="flex flex-col gap-3">
           <div className="flex items-center gap-2">
@@ -326,6 +378,14 @@ import { Label } from "@/components/ui/label"
           <div className="flex items-center gap-2">
             <Checkbox id="docs-disabled" disabled defaultChecked />
             <Label htmlFor="docs-disabled">Opsi nonaktif</Label>
+          </div>
+          <div className="flex items-center gap-2">
+            <Checkbox id="docs-brand-pri" color="primary" defaultChecked />
+            <Label htmlFor="docs-brand-pri">Primary</Label>
+          </div>
+          <div className="flex items-center gap-2">
+            <Checkbox id="docs-brand-sec" color="secondary" defaultChecked />
+            <Label htmlFor="docs-brand-sec">Secondary</Label>
           </div>
         </div>
       </ComponentSection>
@@ -366,6 +426,12 @@ import { Label } from "@/components/ui/label"
             default: "—",
             description: "Callback yang dipanggil saat status berubah",
           },
+          {
+            prop: "color",
+            type: '"primary" | "secondary" | "info" | "success" | "warning" | "error" | "black" | "white"',
+            default: "—",
+            description: "Override warna aktif switch dengan brand color",
+          },
         ]}
         code={`import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
@@ -376,7 +442,11 @@ import { Label } from "@/components/ui/label"
 </div>
 
 {/* Ukuran kecil */}
-<Switch size="sm" defaultChecked />`}
+<Switch size="sm" defaultChecked />
+
+{/* Brand color */}
+<Switch color="primary" defaultChecked />
+<Switch color="secondary" defaultChecked />`}
       >
         <div className="flex flex-col gap-4 items-start">
           <div className="flex items-center gap-2">
@@ -394,6 +464,14 @@ import { Label } from "@/components/ui/label"
           <div className="flex items-center gap-2">
             <Switch id="docs-switch-disabled" disabled />
             <Label htmlFor="docs-switch-disabled">Nonaktif</Label>
+          </div>
+          <div className="flex items-center gap-3">
+            <Switch color="primary" defaultChecked />
+            <Label>Primary</Label>
+          </div>
+          <div className="flex items-center gap-3">
+            <Switch color="secondary" defaultChecked />
+            <Label>Secondary</Label>
           </div>
         </div>
       </ComponentSection>
@@ -434,6 +512,12 @@ import { Label } from "@/components/ui/label"
             default: "false",
             description: "Nonaktifkan toggle",
           },
+          {
+            prop: "color",
+            type: '"primary" | "secondary" | "info" | "success" | "warning" | "error" | "black" | "white"',
+            default: "—",
+            description: "Override warna aktif toggle dengan brand color",
+          },
         ]}
         code={`import { Toggle } from "@/components/ui/toggle"
 import { BoldIcon, ItalicIcon, UnderlineIcon } from "lucide-react"
@@ -446,6 +530,14 @@ import { BoldIcon, ItalicIcon, UnderlineIcon } from "lucide-react"
 </Toggle>
 <Toggle variant="outline" aria-label="Underline" disabled>
   <UnderlineIcon />
+</Toggle>
+
+{/* Brand color */}
+<Toggle color="primary" aria-label="Bold" defaultPressed>
+  <BoldIcon />
+</Toggle>
+<Toggle color="secondary" aria-label="Bold" defaultPressed>
+  <BoldIcon />
 </Toggle>`}
       >
         <div className="flex items-center gap-2">
@@ -462,6 +554,12 @@ import { BoldIcon, ItalicIcon, UnderlineIcon } from "lucide-react"
             <BoldIcon />
           </Toggle>
           <Toggle variant="outline" size="lg" aria-label="Bold besar">
+            <BoldIcon />
+          </Toggle>
+          <Toggle color="primary" aria-label="Bold primary" defaultPressed>
+            <BoldIcon />
+          </Toggle>
+          <Toggle color="secondary" aria-label="Bold secondary" defaultPressed>
             <BoldIcon />
           </Toggle>
         </div>
@@ -515,6 +613,12 @@ import { BoldIcon, ItalicIcon, UnderlineIcon } from "lucide-react"
             default: "false",
             description: "Nonaktifkan slider",
           },
+          {
+            prop: "color",
+            type: '"primary" | "secondary" | "info" | "success" | "warning" | "error" | "black" | "white"',
+            default: "—",
+            description: "Override warna track dan thumb slider dengan brand color",
+          },
         ]}
         code={`import { Slider } from "@/components/ui/slider"
 
@@ -522,12 +626,18 @@ import { BoldIcon, ItalicIcon, UnderlineIcon } from "lucide-react"
 <Slider defaultValue={[50]} max={100} step={1} className="w-64" />
 
 {/* Range (dua thumb) */}
-<Slider defaultValue={[20, 70]} max={100} step={5} className="w-64" />`}
+<Slider defaultValue={[20, 70]} max={100} step={5} className="w-64" />
+
+{/* Brand color */}
+<Slider color="primary" defaultValue={[50]} max={100} className="w-64" />
+<Slider color="secondary" defaultValue={[30]} max={100} className="w-64" />`}
       >
         <div className="flex flex-col gap-6 w-64">
           <Slider defaultValue={[50]} max={100} step={1} />
           <Slider defaultValue={[20, 70]} max={100} step={5} />
           <Slider defaultValue={[30]} max={100} disabled />
+          <Slider color="primary" defaultValue={[60]} max={100} />
+          <Slider color="secondary" defaultValue={[40]} max={100} />
         </div>
       </ComponentSection>
 
@@ -633,6 +743,12 @@ import { BoldIcon, ItalicIcon, UnderlineIcon } from "lucide-react"
             default: "—",
             description: "Kelas Tailwind untuk mengatur ukuran, warna, dan kecepatan animasi",
           },
+          {
+            prop: "color",
+            type: '"primary" | "secondary" | "info" | "success" | "warning" | "error" | "black" | "white"',
+            default: "—",
+            description: "Warnai spinner dengan brand color",
+          },
         ]}
         code={`import { Spinner } from "@/components/ui/spinner"
 import { Button } from "@/components/ui/button"
@@ -646,7 +762,11 @@ import { Button } from "@/components/ui/button"
 <Button disabled>
   <Spinner />
   Memuat...
-</Button>`}
+</Button>
+
+{/* Brand color */}
+<Spinner color="primary" className="size-6" />
+<Spinner color="secondary" className="size-8" />`}
       >
         <div className="flex flex-col items-center gap-6">
           <div className="flex items-center gap-6">
@@ -654,6 +774,8 @@ import { Button } from "@/components/ui/button"
             <Spinner className="size-6" />
             <Spinner className="size-8" />
             <Spinner className="size-10 text-primary" />
+            <Spinner color="primary" className="size-6" />
+            <Spinner color="secondary" className="size-8" />
           </div>
           <Button disabled>
             <Spinner />
@@ -680,6 +802,12 @@ import { Button } from "@/components/ui/button"
             default: "—",
             description: "Kelas tambahan untuk kustomisasi tampilan",
           },
+          {
+            prop: "color",
+            type: '"primary" | "secondary" | "info" | "success" | "warning" | "error" | "black" | "white"',
+            default: "—",
+            description: "Override warna background dan teks Kbd dengan brand color",
+          },
         ]}
         code={`import { Kbd, KbdGroup } from "@/components/ui/kbd"
 
@@ -692,7 +820,11 @@ import { Button } from "@/components/ui/button"
 <KbdGroup>
   <Kbd>⌘</Kbd>
   <Kbd>K</Kbd>
-</KbdGroup>`}
+</KbdGroup>
+
+{/* Brand color */}
+<Kbd color="primary">⌘</Kbd>
+<Kbd color="secondary">K</Kbd>`}
       >
         <div className="flex flex-col items-center gap-4">
           <div className="flex items-center gap-2">
@@ -718,6 +850,11 @@ import { Button } from "@/components/ui/button"
                 <Kbd>S</Kbd>
               </KbdGroup>
             </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <Kbd color="primary">⌘</Kbd>
+            <Kbd color="secondary">K</Kbd>
+            <span className="text-xs text-muted-foreground">Brand color</span>
           </div>
         </div>
       </ComponentSection>
@@ -758,6 +895,12 @@ import { Button } from "@/components/ui/button"
             default: '"vertical"',
             description: "Orientasi navigasi keyboard antar item",
           },
+          {
+            prop: "RadioGroupItem color",
+            type: '"primary" | "secondary" | "info" | "success" | "warning" | "error" | "black" | "white"',
+            default: "—",
+            description: "Override warna indikator radio item dengan brand color",
+          },
         ]}
         code={`import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Label } from "@/components/ui/label"
@@ -775,7 +918,11 @@ import { Label } from "@/components/ui/label"
     <RadioGroupItem value="bulanan" id="bulanan" />
     <Label htmlFor="bulanan">Bulanan</Label>
   </div>
-</RadioGroup>`}
+</RadioGroup>
+
+{/* Brand color */}
+<RadioGroupItem value="x" color="primary" />
+<RadioGroupItem value="y" color="secondary" />`}
       >
         <RadioGroup defaultValue="bulanan">
           <div className="flex items-center gap-2">
@@ -793,6 +940,14 @@ import { Label } from "@/components/ui/label"
           <div className="flex items-center gap-2">
             <RadioGroupItem value="tahunan" id="docs-tahunan" disabled />
             <Label htmlFor="docs-tahunan" className="opacity-50">Tahunan (nonaktif)</Label>
+          </div>
+          <div className="flex items-center gap-2">
+            <RadioGroupItem value="brand-pri" id="docs-brand-pri" color="primary" />
+            <Label htmlFor="docs-brand-pri">Primary</Label>
+          </div>
+          <div className="flex items-center gap-2">
+            <RadioGroupItem value="brand-sec" id="docs-brand-sec" color="secondary" />
+            <Label htmlFor="docs-brand-sec">Secondary</Label>
           </div>
         </RadioGroup>
       </ComponentSection>

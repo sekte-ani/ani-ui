@@ -4,6 +4,7 @@ import * as React from "react"
 import { Slider as SliderPrimitive } from "radix-ui"
 
 import { cn } from "@/lib/utils"
+import { type ColorToken, colorMap } from "@/components/ui/color-palette.variants"
 
 function Slider({
   className,
@@ -11,8 +12,12 @@ function Slider({
   value,
   min = 0,
   max = 100,
+  color,
+  style,
   ...props
-}: React.ComponentProps<typeof SliderPrimitive.Root>) {
+}: React.ComponentProps<typeof SliderPrimitive.Root> & {
+  color?: ColorToken
+}) {
   const _values = React.useMemo(
     () =>
       Array.isArray(value)
@@ -22,6 +27,10 @@ function Slider({
           : [min, max],
     [value, defaultValue, min, max]
   )
+
+  const rootStyle = color
+    ? { ...style, "--sl-brand": colorMap[color] } as React.CSSProperties
+    : style
 
   return (
     <SliderPrimitive.Root
@@ -34,6 +43,7 @@ function Slider({
         "relative flex w-full touch-none items-center select-none data-[disabled]:opacity-50 data-[orientation=vertical]:h-full data-[orientation=vertical]:min-h-44 data-[orientation=vertical]:w-auto data-[orientation=vertical]:flex-col",
         className
       )}
+      style={rootStyle}
       {...props}
     >
       <SliderPrimitive.Track
@@ -45,7 +55,8 @@ function Slider({
         <SliderPrimitive.Range
           data-slot="slider-range"
           className={cn(
-            "absolute bg-primary data-[orientation=horizontal]:h-full data-[orientation=vertical]:w-full"
+            "absolute data-[orientation=horizontal]:h-full data-[orientation=vertical]:w-full",
+            color ? "bg-[var(--sl-brand)]" : "bg-primary"
           )}
         />
       </SliderPrimitive.Track>
@@ -53,7 +64,10 @@ function Slider({
         <SliderPrimitive.Thumb
           data-slot="slider-thumb"
           key={index}
-          className="block size-4 shrink-0 rounded-full border border-primary bg-white shadow-sm ring-ring/50 transition-[color,box-shadow] hover:ring-4 focus-visible:ring-4 focus-visible:outline-hidden disabled:pointer-events-none disabled:opacity-50"
+          className={cn(
+            "block size-4 shrink-0 rounded-full bg-white shadow-sm ring-ring/50 transition-[color,box-shadow] hover:ring-4 focus-visible:ring-4 focus-visible:outline-hidden disabled:pointer-events-none disabled:opacity-50",
+            color ? "border border-[var(--sl-brand)]" : "border border-primary"
+          )}
         />
       ))}
     </SliderPrimitive.Root>
