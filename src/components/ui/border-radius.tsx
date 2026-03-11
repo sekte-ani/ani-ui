@@ -1,17 +1,5 @@
-import { FoundationSection } from "../../docs/foundation"
-
-
-// ── Data ──────────────────────────────────────────────────────────────────────
-
-const RADIUS_SCALE = [
-  { token: "radius-none", value: "0px", label: "None" },
-  { token: "radius-sm", value: "4px", label: "Small" },
-  { token: "radius-md", value: "8px", label: "Medium" },
-  { token: "radius-lg", value: "12px", label: "Large" },
-  { token: "radius-xl", value: "16px", label: "X-Large" },
-  { token: "radius-2xl", value: "24px", label: "2X-Large" },
-  { token: "radius-full", value: "9999px", label: "Full (Pill)" },
-]
+import { FoundationSection } from "@/docs/foundation"
+import { RADIUS_SCALE } from "@/components/ui/border-radius.variants"
 
 // ── Export ────────────────────────────────────────────────────────────────────
 

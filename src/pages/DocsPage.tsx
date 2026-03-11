@@ -6,6 +6,7 @@ import { FoundationDoc } from "@/docs/foundation"
 import { AtomsDoc } from "@/docs/atoms"
 import { MoleculesDoc } from "@/docs/molecules"
 import { OrganismsDoc } from "@/docs/organisms"
+import { PlaygroundDoc } from "@/docs/playground"
 
 // Only items that have a real section rendered in the content area
 const NAV_GROUPS = [
@@ -18,6 +19,7 @@ const NAV_GROUPS = [
       "Border Radius",
       "Grid System",
       "Shadow",
+      "Text Shadow",
       "Icon Style",
     ],
 
@@ -73,6 +75,13 @@ const NAV_GROUPS = [
       "Navigation Menu",
     ],
   },
+  {
+    label: "Playground",
+    items: [
+      "Playground",
+      "Element Playground",
+    ]
+  }
 ]
 
 const ALL_ITEMS = NAV_GROUPS.flatMap((g) => g.items)
@@ -256,6 +265,7 @@ export function DocsPage() {
             <AtomsDoc />
             <MoleculesDoc />
             <OrganismsDoc />
+            <PlaygroundDoc />
           </div>
         </div>
       </main>

@@ -34,6 +34,46 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+
+  /* ── Brand / design-system color tokens ── */
+  --brand-primary:   #4C9DAE;
+  --brand-secondary: #D5E1E9;
+  --brand-info:      #d7dded;
+  --brand-success:   #27AE60;
+  --brand-warning:   #E2B93B;
+  --brand-error:     #EB5757;
+  --brand-black:     #252525;
+  --brand-white:     #FFFFFF;
+
+  /* ── Brand border-radius tokens ── */
+  --brand-radius-none: 0px;
+  --brand-radius-sm:   4px;
+  --brand-radius-md:   8px;
+  --brand-radius-lg:   12px;
+  --brand-radius-xl:   16px;
+  --brand-radius-2xl:  24px;
+  --brand-radius-full: 9999px;
+
+  /* ── Brand shadow / elevation tokens ── */
+  --brand-shadow-xs:    0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --brand-shadow-sm:    0 1px 3px 0 rgb(0 0 0 / 0.10), 0 1px 2px -1px rgb(0 0 0 / 0.10);
+  --brand-shadow-base:  0 4px 6px -1px rgb(0 0 0 / 0.10), 0 2px 4px -2px rgb(0 0 0 / 0.10);
+  --brand-shadow-md:    0 4px 6px -1px rgb(0 0 0 / 0.10), 0 2px 4px -2px rgb(0 0 0 / 0.10);
+  --brand-shadow-lg:    0 10px 15px -3px rgb(0 0 0 / 0.10), 0 4px 6px -4px rgb(0 0 0 / 0.10);
+  --brand-shadow-xl:    0 20px 25px -5px rgb(0 0 0 / 0.10), 0 8px 10px -6px rgb(0 0 0 / 0.10);
+  --brand-shadow-2xl:   0 25px 50px -12px rgb(0 0 0 / 0.25);
+  --brand-shadow-inner: inset 0 2px 4px 0 rgb(0 0 0 / 0.05);
+
+  /* ── Brand text-shadow tokens ── */
+  --brand-text-shadow-none:    none;
+  --brand-text-shadow-sm:      0 1px 2px rgb(0 0 0 / 0.15);
+  --brand-text-shadow-base:    0 1px 3px rgb(0 0 0 / 0.25);
+  --brand-text-shadow-md:      0 2px 4px rgb(0 0 0 / 0.30);
+  --brand-text-shadow-lg:      0 3px 6px rgb(0 0 0 / 0.35);
+  --brand-text-shadow-xl:      0 4px 8px rgb(0 0 0 / 0.40);
+  --brand-text-shadow-glow:    0 0 8px rgb(76 157 174 / 0.60), 0 0 20px rgb(76 157 174 / 0.30);
+  --brand-text-shadow-crisp:   1px 1px 0 rgb(0 0 0 / 0.20);
+  --brand-text-shadow-outline: -1px -1px 0 rgb(0 0 0 / 0.30), 1px -1px 0 rgb(0 0 0 / 0.30), -1px 1px 0 rgb(0 0 0 / 0.30), 1px 1px 0 rgb(0 0 0 / 0.30);
 }
 
 @theme inline {
@@ -75,6 +115,35 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+
+  /* ── Brand / design-system color tokens ── */
+  --color-brand-primary:   var(--brand-primary);
+  --color-brand-secondary: var(--brand-secondary);
+  --color-brand-info:      var(--brand-info);
+  --color-brand-success:   var(--brand-success);
+  --color-brand-warning:   var(--brand-warning);
+  --color-brand-error:     var(--brand-error);
+  --color-brand-black:     var(--brand-black);
+  --color-brand-white:     var(--brand-white);
+
+  /* ── Brand border-radius tokens ── */
+  --radius-brand-none: var(--brand-radius-none);
+  --radius-brand-sm:   var(--brand-radius-sm);
+  --radius-brand-md:   var(--brand-radius-md);
+  --radius-brand-lg:   var(--brand-radius-lg);
+  --radius-brand-xl:   var(--brand-radius-xl);
+  --radius-brand-2xl:  var(--brand-radius-2xl);
+  --radius-brand-full: var(--brand-radius-full);
+
+  /* ── Brand shadow / elevation tokens ── */
+  --shadow-brand-xs:    var(--brand-shadow-xs);
+  --shadow-brand-sm:    var(--brand-shadow-sm);
+  --shadow-brand-base:  var(--brand-shadow-base);
+  --shadow-brand-md:    var(--brand-shadow-md);
+  --shadow-brand-lg:    var(--brand-shadow-lg);
+  --shadow-brand-xl:    var(--brand-shadow-xl);
+  --shadow-brand-2xl:   var(--brand-shadow-2xl);
+  --shadow-brand-inner: var(--brand-shadow-inner);
 }
 
 .dark {
@@ -118,4 +187,36 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* ── Brand text-shadow utility classes ───────────────────────────────────────────
+ * Tailwind has no built-in text-shadow, so we register them as @utility.
+ */
+
+@utility text-shadow-brand-none {
+  text-shadow: var(--brand-text-shadow-none);
+}
+@utility text-shadow-brand-sm {
+  text-shadow: var(--brand-text-shadow-sm);
+}
+@utility text-shadow-brand-base {
+  text-shadow: var(--brand-text-shadow-base);
+}
+@utility text-shadow-brand-md {
+  text-shadow: var(--brand-text-shadow-md);
+}
+@utility text-shadow-brand-lg {
+  text-shadow: var(--brand-text-shadow-lg);
+}
+@utility text-shadow-brand-xl {
+  text-shadow: var(--brand-text-shadow-xl);
+}
+@utility text-shadow-brand-glow {
+  text-shadow: var(--brand-text-shadow-glow);
+}
+@utility text-shadow-brand-crisp {
+  text-shadow: var(--brand-text-shadow-crisp);
+}
+@utility text-shadow-brand-outline {
+  text-shadow: var(--brand-text-shadow-outline);
 }
