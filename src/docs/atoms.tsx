@@ -1027,6 +1027,12 @@ import { Label } from "@/components/ui/label"
             default: '"vertical"',
             description: "Orientasi garis pemisah antar elemen grup",
           },
+          {
+            prop: "color",
+            type: '"primary" | "secondary" | "info" | "success" | "warning" | "error" | "black" | "white"',
+            default: "—",
+            description: "Brand color untuk border grup. ButtonGroupText juga mendukung color untuk override background",
+          },
         ]}
         code={`import { ButtonGroup, ButtonGroupText, ButtonGroupSeparator } from "@/components/ui/button-group"
 import { Button } from "@/components/ui/button"
@@ -1050,6 +1056,13 @@ import { Input } from "@/components/ui/input"
 <ButtonGroup orientation="vertical">
   <Button variant="outline">Atas</Button>
   <Button variant="outline">Bawah</Button>
+</ButtonGroup>
+
+{/* Brand color */}
+<ButtonGroup>
+  <ButtonGroupText color="primary">Brand</ButtonGroupText>
+  <ButtonGroupSeparator />
+  <Button variant="outline">Action</Button>
 </ButtonGroup>`}
       >
         <div className="flex flex-col items-center gap-6">
@@ -1067,6 +1080,16 @@ import { Input } from "@/components/ui/input"
             <Button variant="outline">Atas</Button>
             <Button variant="outline">Tengah</Button>
             <Button variant="outline">Bawah</Button>
+          </ButtonGroup>
+          <ButtonGroup>
+            <ButtonGroupText color="primary">Primary</ButtonGroupText>
+            <ButtonGroupSeparator />
+            <Button variant="outline">Action</Button>
+          </ButtonGroup>
+          <ButtonGroup>
+            <ButtonGroupText color="secondary">Secondary</ButtonGroupText>
+            <ButtonGroupSeparator />
+            <Button variant="outline">Action</Button>
           </ButtonGroup>
         </div>
       </ComponentSection>

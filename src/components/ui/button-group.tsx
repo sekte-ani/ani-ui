@@ -3,6 +3,12 @@ import { Slot } from "radix-ui";
 
 import { cn } from "@/lib/utils";
 import { Separator } from "@/components/ui/separator";
+import {
+  type ColorToken,
+  bgColorClassMap,
+  fgOnBrandBgClass,
+  borderColorClassMap,
+} from "@/components/ui/color-palette.variants";
 
 const buttonGroupVariants = cva(
   "flex w-fit items-stretch has-[>[data-slot=button-group]]:gap-2 [&>*]:focus-visible:relative [&>*]:focus-visible:z-10 has-[select[aria-hidden=true]:last-child]:[&>[data-slot=select-trigger]:last-of-type]:rounded-r-md [&>[data-slot=select-trigger]:not([class*='w-'])]:w-fit [&>input]:flex-1",
@@ -24,14 +30,20 @@ const buttonGroupVariants = cva(
 function ButtonGroup({
   className,
   orientation,
+  color,
   ...props
-}: React.ComponentProps<"div"> & VariantProps<typeof buttonGroupVariants>) {
+}: React.ComponentProps<"div"> &
+  VariantProps<typeof buttonGroupVariants> & {
+    color?: ColorToken;
+  }) {
+  const brandBorder = color ? borderColorClassMap[color] : undefined;
+
   return (
     <div
       role="group"
       data-slot="button-group"
       data-orientation={orientation}
-      className={cn(buttonGroupVariants({ orientation }), className)}
+      className={cn(buttonGroupVariants({ orientation }), brandBorder, className)}
       {...props}
     />
   );
@@ -40,16 +52,23 @@ function ButtonGroup({
 function ButtonGroupText({
   className,
   asChild = false,
+  color,
   ...props
 }: React.ComponentProps<"div"> & {
   asChild?: boolean;
+  color?: ColorToken;
 }) {
   const Comp = asChild ? Slot.Root : "div";
+
+  const brandClasses = color
+    ? `${bgColorClassMap[color]} ${fgOnBrandBgClass[color]}`
+    : undefined;
 
   return (
     <Comp
       className={cn(
         "flex items-center gap-2 rounded-md border bg-muted px-4 text-sm font-medium shadow-xs [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4",
+        brandClasses,
         className,
       )}
       {...props}
