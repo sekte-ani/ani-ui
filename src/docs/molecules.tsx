@@ -1,45 +1,10 @@
 import { useState } from "react"
-import { CalendarIcon, UserIcon } from "lucide-react"
-import { toast } from "sonner"
-import { ComponentSection } from "@/docs/components/ComponentSection"
+import { InfoIcon, TriangleAlertIcon, CheckIcon, CopyIcon } from "lucide-react"
+import { cn } from "@/lib/utils"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { Toaster } from "@/components/ui/sonner"
 import { Button } from "@/components/ui/button"
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb"
 import { Calendar } from "@/components/ui/calendar"
-import {
-  Field,
-  FieldDescription,
-  FieldError,
-  FieldGroup,
-  FieldLabel,
-} from "@/components/ui/field"
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card"
 import { Input } from "@/components/ui/input"
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination"
-import {
-  Popover,
-  PopoverContent,
-  PopoverDescription,
-  PopoverHeader,
-  PopoverTitle,
-  PopoverTrigger,
-} from "@/components/ui/popover"
 import { Progress } from "@/components/ui/progress"
 import {
   Select,
@@ -55,60 +20,74 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip"
 
-export function MoleculesDoc() {
-  const [calendarDate, setCalendarDate] = useState<Date | undefined>(new Date())
+function PlaygroundCodeBlock({ code }: { code: string }) {
+  const [copied, setCopied] = useState(false)
+
+  function handleCopy() {
+    navigator.clipboard.writeText(code).then(() => {
+      setCopied(true)
+      setTimeout(() => setCopied(false), 1800)
+    })
+  }
 
   return (
-    <div>
-      {/* ── Select ── */}
-      <ComponentSection
-        title="Select"
-        description="Dropdown pilihan berbasis Radix UI Select. Menggantikan elemen select HTML native dengan tampilan yang konsisten, aksesibel, dan mendukung keyboard navigation."
-        baseComponent="select"
-        props={[
-          {
-            prop: "value",
-            type: "string",
-            default: "—",
-            description: "Nilai yang dipilih saat ini (controlled)",
-          },
-          {
-            prop: "defaultValue",
-            type: "string",
-            default: "—",
-            description: "Nilai awal yang dipilih (uncontrolled)",
-          },
-          {
-            prop: "onValueChange",
-            type: "(value: string) => void",
-            default: "—",
-            description: "Callback yang dipanggil saat pilihan berubah",
-          },
-          {
-            prop: "disabled",
-            type: "boolean",
-            default: "false",
-            description: "Nonaktifkan seluruh select",
-          },
-          {
-            prop: "SelectTrigger size",
-            type: '"sm" | "default"',
-            default: '"default"',
-            description: "Ukuran tombol trigger",
-          },
-          {
-            prop: "SelectContent position",
-            type: '"item-aligned" | "popper"',
-            default: '"item-aligned"',
-            description: "Posisi dropdown konten relative terhadap trigger",
-          },
-        ]}
-        code={`import {
-  Select, SelectContent, SelectItem,
-  SelectTrigger, SelectValue,
-} from "@/components/ui/select"
+    <div className="group relative overflow-hidden rounded-lg border border-border bg-zinc-950">
+      <button
+        onClick={handleCopy}
+        className="absolute top-3 right-3 z-10 opacity-0 transition-opacity group-hover:opacity-100 text-zinc-400 hover:text-zinc-100 inline-flex h-7 w-7 items-center justify-center rounded-md hover:bg-zinc-800"
+      >
+        {copied ? <CheckIcon className="size-3.5" /> : <CopyIcon className="size-3.5" />}
+      </button>
+      <pre className="overflow-x-auto p-4 text-xs leading-relaxed text-zinc-300">
+        <code>{code}</code>
+      </pre>
+    </div>
+  )
+}
 
-<Select>
+function PillSelect<T extends string>({
+  label,
+  options,
+  value,
+  onChange,
+}: {
+  label: string
+  options: readonly T[]
+  value: T
+  onChange: (v: T) => void
+}) {
+  return (
+    <div>
+      <span className="mb-2 block text-xs font-medium text-muted-foreground uppercase tracking-wider">
+        {label}
+      </span>
+      <div className="flex flex-wrap gap-1.5">
+        {options.map((o) => (
+          <button
+            key={o}
+            onClick={() => onChange(o)}
+            className={cn(
+              "rounded-md px-3 py-1.5 text-xs font-medium transition-all border",
+              value === o
+                ? "bg-primary text-primary-foreground border-primary shadow-sm"
+                : "bg-muted/40 text-muted-foreground border-border hover:bg-accent hover:text-accent-foreground"
+            )}
+          >
+            {o}
+          </button>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+function SelectInteractive() {
+  const [value, setValue] = useState("apel")
+  const [disabled, setDisabled] = useState(false)
+
+  const code = `import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+
+<Select${disabled ? " disabled" : ""} value="${value}" onValueChange={setValue}>
   <SelectTrigger className="w-48">
     <SelectValue placeholder="Pilih buah..." />
   </SelectTrigger>
@@ -116,645 +95,239 @@ export function MoleculesDoc() {
     <SelectItem value="apel">Apel</SelectItem>
     <SelectItem value="pisang">Pisang</SelectItem>
     <SelectItem value="mangga">Mangga</SelectItem>
-    <SelectItem value="jeruk" disabled>Jeruk (nonaktif)</SelectItem>
   </SelectContent>
-</Select>`}
-      >
-        <div className="flex flex-wrap gap-4 justify-center">
-          <Select>
-            <SelectTrigger className="w-48">
-              <SelectValue placeholder="Pilih buah..." />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="apel">Apel</SelectItem>
-              <SelectItem value="pisang">Pisang</SelectItem>
-              <SelectItem value="mangga">Mangga</SelectItem>
-              <SelectItem value="jeruk" disabled>Jeruk (nonaktif)</SelectItem>
-            </SelectContent>
-          </Select>
-          <Select disabled>
-            <SelectTrigger className="w-48">
-              <SelectValue placeholder="Nonaktif" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="a">A</SelectItem>
-            </SelectContent>
-          </Select>
+</Select>`
+
+  return (
+    <section id="select" className="scroll-mt-8 py-10 border-b border-border">
+      <div className="mb-6">
+        <div className="flex items-start gap-3">
+          <div className="flex-1">
+            <h2 className="text-xl font-semibold tracking-tight">Select</h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Dropdown pilihan berbasis Radix UI Select. Coba pilih opsi di bawah.
+            </p>
+          </div>
         </div>
-      </ComponentSection>
+      </div>
 
-      {/* ── Field ── */}
-      <ComponentSection
-        title="Field"
-        description="Komponen pembungkus untuk elemen form yang menyatukan label, input, deskripsi, dan pesan error dalam satu grup aksesibel. Mendukung orientasi vertikal, horizontal, dan responsif."
-        baseComponent="field"
-        props={[
-          {
-            prop: "orientation",
-            type: '"vertical" | "horizontal" | "responsive"',
-            default: '"vertical"',
-            description: "Arah tata letak label dan input",
-          },
-          {
-            prop: "FieldLabel htmlFor",
-            type: "string",
-            default: "—",
-            description: "ID elemen input yang diasosiasikan",
-          },
-          {
-            prop: "FieldDescription",
-            type: "ReactNode",
-            default: "—",
-            description: "Teks deskripsi tambahan di bawah input",
-          },
-          {
-            prop: "FieldError errors",
-            type: "Array<{ message?: string } | undefined>",
-            default: "—",
-            description: "Array error yang akan ditampilkan sebagai pesan validasi",
-          },
-        ]}
-        code={`import { Field, FieldLabel, FieldDescription, FieldError } from "@/components/ui/field"
-import { Input } from "@/components/ui/input"
+      <div className="rounded-lg border border-border bg-muted/20 p-6 space-y-5">
+        <div>
+          <span className="mb-2 block text-xs font-medium text-muted-foreground uppercase tracking-wider">State</span>
+          <button
+            onClick={() => setDisabled(!disabled)}
+            className={cn(
+              "rounded-md px-3 py-1.5 text-xs font-medium transition-all border",
+              disabled
+                ? "bg-primary text-primary-foreground border-primary shadow-sm"
+                : "bg-muted/40 text-muted-foreground border-border hover:bg-accent hover:text-accent-foreground"
+            )}
+          >
+            {disabled ? "Disabled" : "Enabled"}
+          </button>
+        </div>
+      </div>
 
-{/* Field normal */}
-<Field>
-  <FieldLabel htmlFor="username">Nama Pengguna</FieldLabel>
-  <Input id="username" placeholder="cth: john_doe" />
-  <FieldDescription>
-    Nama unik yang akan ditampilkan ke pengguna lain.
-  </FieldDescription>
-</Field>
+      <div className="mt-6 flex min-h-32 items-center justify-center rounded-lg border border-border bg-muted/30 p-8">
+        <Select value={value} onValueChange={setValue} disabled={disabled}>
+          <SelectTrigger className="w-48">
+            <SelectValue placeholder="Pilih buah..." />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="apel">Apel</SelectItem>
+            <SelectItem value="pisang">Pisang</SelectItem>
+            <SelectItem value="mangga">Mangga</SelectItem>
+            <SelectItem value="jeruk" disabled>Jeruk (nonaktif)</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
 
-{/* Field dengan error */}
-<Field>
-  <FieldLabel htmlFor="email">Email</FieldLabel>
-  <Input id="email" aria-invalid placeholder="email@contoh.com" />
-  <FieldError errors={[{ message: "Format email tidak valid." }]} />
-</Field>`}
-      >
-        <FieldGroup className="w-full max-w-sm">
-          <Field>
-            <FieldLabel htmlFor="docs-username">Nama Pengguna</FieldLabel>
-            <Input id="docs-username" placeholder="cth: john_doe" />
-            <FieldDescription>
-              Nama unik yang akan ditampilkan ke pengguna lain.
-            </FieldDescription>
-          </Field>
-          <Field>
-            <FieldLabel htmlFor="docs-email-err">Email</FieldLabel>
-            <Input id="docs-email-err" aria-invalid placeholder="email@contoh.com" />
-            <FieldError errors={[{ message: "Format email tidak valid." }]} />
-          </Field>
-        </FieldGroup>
-      </ComponentSection>
+      <div className="mt-6">
+        <h3 className="mb-3 text-sm font-semibold">Kode</h3>
+        <PlaygroundCodeBlock code={code} />
+      </div>
+    </section>
+  )
+}
 
-      {/* ── Alert ── */}
-      <ComponentSection
-        title="Alert"
-        description="Kotak notifikasi inline untuk menyampaikan informasi penting kepada pengguna. Tersedia dua varian: default untuk informasi umum, dan destructive untuk pesan error atau peringatan kritis."
-        baseComponent="alert"
-        props={[
-          {
-            prop: "variant",
-            type: '"default" | "destructive"',
-            default: '"default"',
-            description: "Varian tampilan alert",
-          },
-          {
-            prop: "AlertTitle",
-            type: "ReactNode",
-            default: "—",
-            description: "Judul alert yang ditampilkan dalam teks tebal",
-          },
-          {
-            prop: "AlertDescription",
-            type: "ReactNode",
-            default: "—",
-            description: "Isi deskripsi alert",
-          },
-        ]}
-        code={`import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert"
-import { InfoIcon, TriangleAlertIcon } from "lucide-react"
+function AlertInteractive() {
+  const [variant, setVariant] = useState<"default" | "destructive">("default")
 
-<Alert>
+  const code = `import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert"
+
+<Alert${variant !== "default" ? ` variant="${variant}"` : ""}>
   <InfoIcon />
   <AlertTitle>Informasi</AlertTitle>
   <AlertDescription>
-    Pembaruan versi baru tersedia. Silakan refresh halaman.
+    Pembaruan versi baru tersedia.
   </AlertDescription>
-</Alert>
+</Alert>`
 
-<Alert variant="destructive">
-  <TriangleAlertIcon />
-  <AlertTitle>Terjadi Kesalahan</AlertTitle>
-  <AlertDescription>
-    Sesi Anda telah berakhir. Silakan masuk kembali.
-  </AlertDescription>
-</Alert>`}
-      >
-        <div className="flex flex-col gap-3 w-full max-w-md">
-          <Alert>
-            <CalendarIcon />
-            <AlertTitle>Informasi</AlertTitle>
-            <AlertDescription>
-              Pembaruan versi baru tersedia. Silakan refresh halaman Anda.
-            </AlertDescription>
-          </Alert>
-          <Alert variant="destructive">
-            <UserIcon />
-            <AlertTitle>Terjadi Kesalahan</AlertTitle>
-            <AlertDescription>
-              Sesi Anda telah berakhir. Silakan masuk kembali.
-            </AlertDescription>
-          </Alert>
-        </div>
-      </ComponentSection>
-
-      {/* ── Sonner ── */}
-      <ComponentSection
-        title="Sonner"
-        description="Sistem notifikasi toast berbasis library Sonner. Pasang komponen Toaster satu kali di root aplikasi, lalu panggil fungsi toast() dari mana saja untuk memunculkan notifikasi dengan berbagai tipe."
-        baseComponent="sonner"
-        props={[
-          {
-            prop: "Toaster position",
-            type: '"top-left" | "top-center" | "top-right" | "bottom-left" | "bottom-center" | "bottom-right"',
-            default: '"bottom-right"',
-            description: "Posisi kemunculan toast di layar",
-          },
-          {
-            prop: "Toaster richColors",
-            type: "boolean",
-            default: "false",
-            description: "Aktifkan warna kaya untuk setiap tipe toast",
-          },
-          {
-            prop: "toast(message)",
-            type: "string",
-            default: "—",
-            description: "Teks pesan toast yang akan ditampilkan",
-          },
-          {
-            prop: "toast.success / .error / .warning / .info",
-            type: "string",
-            default: "—",
-            description: "Varian toast dengan ikon dan warna sesuai tipe",
-          },
-        ]}
-        code={`import { Toaster } from "@/components/ui/sonner"
-import { toast } from "sonner"
-
-{/* Pasang Toaster di root aplikasi */}
-<Toaster />
-
-{/* Panggil toast() dari komponen mana saja */}
-toast("Pesan tersimpan!")
-toast.success("Berhasil diunggah!")
-toast.error("Gagal menyimpan data.")
-toast.warning("Kuota penyimpanan hampir penuh.")
-toast.info("Fitur baru tersedia.")`}
-      >
-        <div className="flex flex-col items-center gap-3">
-          <Toaster />
-          <div className="flex flex-wrap gap-2 justify-center">
-            <Button variant="outline" onClick={() => toast("Pesan umum berhasil dikirim!")}>
-              Default
-            </Button>
-            <Button variant="outline" onClick={() => toast.success("Data berhasil disimpan!")}>
-              Success
-            </Button>
-            <Button variant="outline" onClick={() => toast.error("Gagal menghubungi server.")}>
-              Error
-            </Button>
-            <Button variant="outline" onClick={() => toast.warning("Kuota hampir penuh.")}>
-              Warning
-            </Button>
-            <Button variant="outline" onClick={() => toast.info("Versi terbaru tersedia.")}>
-              Info
-            </Button>
+  return (
+    <section id="alert" className="scroll-mt-8 py-10 border-b border-border">
+      <div className="mb-6">
+        <div className="flex items-start gap-3">
+          <div className="flex-1">
+            <h2 className="text-xl font-semibold tracking-tight">Alert</h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Kotak notifikasi inline untuk menyampaikan informasi penting.
+            </p>
           </div>
-          <p className="text-xs text-muted-foreground">Klik tombol untuk memunculkan toast</p>
         </div>
-      </ComponentSection>
+      </div>
 
-      {/* ── Tooltip ── */}
-      <ComponentSection
-        title="Tooltip"
-        description="Teks bantuan kecil yang muncul saat pengguna mengarahkan kursor ke elemen. Dibangun di atas Radix UI Tooltip dengan animasi masuk/keluar dan dukungan keyboard."
-        baseComponent="tooltip"
-        props={[
-          {
-            prop: "TooltipProvider delayDuration",
-            type: "number",
-            default: "0",
-            description: "Durasi delay sebelum tooltip muncul (dalam ms)",
-          },
-          {
-            prop: "TooltipContent side",
-            type: '"top" | "right" | "bottom" | "left"',
-            default: '"top"',
-            description: "Sisi kemunculan tooltip relatif terhadap trigger",
-          },
-          {
-            prop: "TooltipContent sideOffset",
-            type: "number",
-            default: "0",
-            description: "Jarak (px) antara tooltip dan trigger",
-          },
-        ]}
-        code={`import {
-  Tooltip, TooltipContent,
-  TooltipProvider, TooltipTrigger,
-} from "@/components/ui/tooltip"
+      <div className="rounded-lg border border-border bg-muted/20 p-6 space-y-5">
+        <PillSelect
+          label="Variant"
+          options={["default", "destructive"] as const}
+          value={variant}
+          onChange={setVariant}
+        />
+      </div>
+
+      <div className="mt-6 flex min-h-32 items-center justify-center rounded-lg border border-border bg-muted/30 p-8">
+        <Alert variant={variant}>
+          {variant === "destructive" ? <TriangleAlertIcon /> : <InfoIcon />}
+          <AlertTitle>{variant === "destructive" ? "Peringatan" : "Informasi"}</AlertTitle>
+          <AlertDescription>
+            {variant === "destructive" 
+              ? "Terjadi kesalahan. Silakan coba lagi." 
+              : "Pembaruan versi baru tersedia. Silakan refresh halaman."}
+          </AlertDescription>
+        </Alert>
+      </div>
+
+      <div className="mt-6">
+        <h3 className="mb-3 text-sm font-semibold">Kode</h3>
+        <PlaygroundCodeBlock code={code} />
+      </div>
+    </section>
+  )
+}
+
+function ProgressInteractive() {
+  const [value, setValue] = useState(33)
+  const [max, setMax] = useState(100)
+
+  const code = `import { Progress } from "@/components/ui/progress"
+
+<Progress value={${value}} max={${max}} />`
+
+  return (
+    <section id="progress" className="scroll-mt-8 py-10 border-b border-border">
+      <div className="mb-6">
+        <div className="flex items-start gap-3">
+          <div className="flex-1">
+            <h2 className="text-xl font-semibold tracking-tight">Progress</h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Indikator kemajuan berbentuk batang horizontal.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div className="rounded-lg border border-border bg-muted/20 p-6 space-y-5">
+        <div>
+          <span className="mb-2 block text-xs font-medium text-muted-foreground uppercase tracking-wider">Value</span>
+          <Input
+            type="number"
+            value={value}
+            onChange={(e) => setValue(Number(e.target.value))}
+            className="max-w-32"
+          />
+        </div>
+        <div>
+          <span className="mb-2 block text-xs font-medium text-muted-foreground uppercase tracking-wider">Max</span>
+          <Input
+            type="number"
+            value={max}
+            onChange={(e) => setMax(Number(e.target.value))}
+            className="max-w-32"
+          />
+        </div>
+      </div>
+
+      <div className="mt-6 flex min-h-32 items-center justify-center rounded-lg border border-border bg-muted/30 p-8">
+        <div className="w-full max-w-sm space-y-2">
+          <div className="flex justify-between text-xs text-muted-foreground">
+            <span>Progress</span>
+            <span>{value}/{max}</span>
+          </div>
+          <Progress value={value} max={max} />
+        </div>
+      </div>
+
+      <div className="mt-6">
+        <h3 className="mb-3 text-sm font-semibold">Kode</h3>
+        <PlaygroundCodeBlock code={code} />
+      </div>
+    </section>
+  )
+}
+
+function TooltipInteractive() {
+  const [side, setSide] = useState<"top" | "right" | "bottom" | "left">("top")
+
+  const code = `import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 
 <TooltipProvider>
   <Tooltip>
     <TooltipTrigger asChild>
-      <Button variant="outline">Arahkan kursor</Button>
+      <Button variant="outline">Hover me</Button>
     </TooltipTrigger>
-    <TooltipContent>
-      <p>Ini adalah tooltip!</p>
+    <TooltipContent side="${side}">
+      <p>Tooltip content</p>
     </TooltipContent>
   </Tooltip>
-</TooltipProvider>`}
-      >
-        <TooltipProvider>
-          <div className="flex flex-wrap gap-4 justify-center">
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button variant="outline">Atas (default)</Button>
-              </TooltipTrigger>
-              <TooltipContent side="top">
-                <p>Tooltip muncul di atas</p>
-              </TooltipContent>
-            </Tooltip>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button variant="outline">Kanan</Button>
-              </TooltipTrigger>
-              <TooltipContent side="right">
-                <p>Tooltip muncul di kanan</p>
-              </TooltipContent>
-            </Tooltip>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button variant="outline">Bawah</Button>
-              </TooltipTrigger>
-              <TooltipContent side="bottom">
-                <p>Tooltip muncul di bawah</p>
-              </TooltipContent>
-            </Tooltip>
-          </div>
-        </TooltipProvider>
-      </ComponentSection>
+</TooltipProvider>`
 
-      {/* ── HoverCard ── */}
-      <ComponentSection
-        title="Hover Card"
-        description="Kartu informasi yang muncul saat pengguna mengarahkan kursor ke elemen trigger. Ideal untuk menampilkan preview konten seperti profil pengguna atau tautan tanpa harus navigasi."
-        baseComponent="hover-card"
-        props={[
-          {
-            prop: "openDelay",
-            type: "number",
-            default: "700",
-            description: "Delay (ms) sebelum kartu muncul",
-          },
-          {
-            prop: "closeDelay",
-            type: "number",
-            default: "300",
-            description: "Delay (ms) sebelum kartu hilang",
-          },
-          {
-            prop: "HoverCardContent align",
-            type: '"start" | "center" | "end"',
-            default: '"center"',
-            description: "Penyelarasan konten terhadap trigger",
-          },
-          {
-            prop: "HoverCardContent side",
-            type: '"top" | "right" | "bottom" | "left"',
-            default: '"bottom"',
-            description: "Sisi kemunculan kartu",
-          },
-        ]}
-        code={`import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-
-<HoverCard>
-  <HoverCardTrigger asChild>
-    <Button variant="link">@shadcn</Button>
-  </HoverCardTrigger>
-  <HoverCardContent>
-    <div className="flex gap-4">
-      <Avatar>
-        <AvatarImage src="https://github.com/shadcn.png" />
-        <AvatarFallback>SC</AvatarFallback>
-      </Avatar>
-      <div>
-        <p className="font-semibold">@shadcn</p>
-        <p className="text-sm text-muted-foreground">Pencipta shadcn/ui</p>
-      </div>
-    </div>
-  </HoverCardContent>
-</HoverCard>`}
-      >
-        <HoverCard>
-          <HoverCardTrigger asChild>
-            <Button variant="link">@shadcn</Button>
-          </HoverCardTrigger>
-          <HoverCardContent className="w-72">
-            <div className="flex gap-4">
-              <div className="flex size-10 items-center justify-center rounded-full bg-muted text-sm font-medium">
-                SC
-              </div>
-              <div className="space-y-1">
-                <p className="text-sm font-semibold">@shadcn</p>
-                <p className="text-xs text-muted-foreground">
-                  Pencipta shadcn/ui — design system berbasis Radix + Tailwind CSS.
-                </p>
-                <p className="text-xs text-muted-foreground">Bergabung Januari 2023</p>
-              </div>
-            </div>
-          </HoverCardContent>
-        </HoverCard>
-      </ComponentSection>
-
-      {/* ── Popover ── */}
-      <ComponentSection
-        title="Popover"
-        description="Panel mengambang yang muncul relatif terhadap elemen trigger saat diklik. Cocok untuk form inline, filter, atau konten interaktif lainnya yang tidak memerlukan overlay penuh."
-        baseComponent="popover"
-        props={[
-          {
-            prop: "PopoverContent align",
-            type: '"start" | "center" | "end"',
-            default: '"center"',
-            description: "Penyelarasan konten terhadap trigger",
-          },
-          {
-            prop: "PopoverContent side",
-            type: '"top" | "right" | "bottom" | "left"',
-            default: '"bottom"',
-            description: "Sisi kemunculan popover",
-          },
-          {
-            prop: "PopoverContent sideOffset",
-            type: "number",
-            default: "4",
-            description: "Jarak (px) antara popover dan trigger",
-          },
-        ]}
-        code={`import {
-  Popover, PopoverContent, PopoverTrigger,
-  PopoverHeader, PopoverTitle, PopoverDescription,
-} from "@/components/ui/popover"
-
-<Popover>
-  <PopoverTrigger asChild>
-    <Button variant="outline">Buka Popover</Button>
-  </PopoverTrigger>
-  <PopoverContent className="w-80">
-    <PopoverHeader>
-      <PopoverTitle>Pengaturan Tampilan</PopoverTitle>
-      <PopoverDescription>
-        Sesuaikan preferensi tampilan Anda.
-      </PopoverDescription>
-    </PopoverHeader>
-    <div className="mt-3 grid gap-2">
-      <Input placeholder="Nama tampilan" />
-      <Button size="sm">Simpan</Button>
-    </div>
-  </PopoverContent>
-</Popover>`}
-      >
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button variant="outline">Buka Popover</Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-80">
-            <PopoverHeader>
-              <PopoverTitle>Pengaturan Tampilan</PopoverTitle>
-              <PopoverDescription>
-                Sesuaikan preferensi tampilan Anda.
-              </PopoverDescription>
-            </PopoverHeader>
-            <div className="mt-3 grid gap-2">
-              <Input placeholder="Nama tampilan" />
-              <Button size="sm">Simpan</Button>
-            </div>
-          </PopoverContent>
-        </Popover>
-      </ComponentSection>
-
-      {/* ── Progress ── */}
-      <ComponentSection
-        title="Progress"
-        description="Indikator kemajuan berbentuk batang horizontal untuk menampilkan persentase penyelesaian suatu proses, seperti unggahan file, pengisian form, atau langkah onboarding."
-        baseComponent="progress"
-        props={[
-          {
-            prop: "value",
-            type: "number",
-            default: "0",
-            description: "Nilai kemajuan saat ini — dalam rentang 0 hingga max",
-          },
-          {
-            prop: "max",
-            type: "number",
-            default: "100",
-            description: "Nilai maksimum kemajuan",
-          },
-        ]}
-        code={`import { Progress } from "@/components/ui/progress"
-
-<Progress value={33} />
-<Progress value={66} />
-<Progress value={100} />`}
-      >
-        <div className="flex flex-col gap-4 w-full max-w-sm">
-          <div className="space-y-1">
-            <div className="flex justify-between text-xs text-muted-foreground">
-              <span>Mengunggah...</span>
-              <span>33%</span>
-            </div>
-            <Progress value={33} />
-          </div>
-          <div className="space-y-1">
-            <div className="flex justify-between text-xs text-muted-foreground">
-              <span>Memproses...</span>
-              <span>66%</span>
-            </div>
-            <Progress value={66} />
-          </div>
-          <div className="space-y-1">
-            <div className="flex justify-between text-xs text-muted-foreground">
-              <span>Selesai</span>
-              <span>100%</span>
-            </div>
-            <Progress value={100} />
+  return (
+    <section id="tooltip" className="scroll-mt-8 py-10 border-b border-border">
+      <div className="mb-6">
+        <div className="flex items-start gap-3">
+          <div className="flex-1">
+            <h2 className="text-xl font-semibold tracking-tight">Tooltip</h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Teks bantuan kecil yang muncul saat hover.
+            </p>
           </div>
         </div>
-      </ComponentSection>
+      </div>
 
-      {/* ── Breadcrumb ── */}
-      <ComponentSection
-        title="Breadcrumb"
-        description="Navigasi hierarkis yang menunjukkan posisi halaman saat ini dalam struktur situs. Membantu pengguna memahami konteks dan berpindah ke halaman induk dengan mudah."
-        baseComponent="breadcrumb"
-        props={[
-          {
-            prop: "BreadcrumbLink asChild",
-            type: "boolean",
-            default: "false",
-            description: "Render tautan sebagai slot komponen anak (mis. Link dari router)",
-          },
-          {
-            prop: "BreadcrumbSeparator children",
-            type: "ReactNode",
-            default: "<ChevronRight />",
-            description: "Kustomisasi pemisah antar item — default ikon chevron kanan",
-          },
-        ]}
-        code={`import {
-  Breadcrumb, BreadcrumbList, BreadcrumbItem,
-  BreadcrumbLink, BreadcrumbPage, BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb"
+      <div className="rounded-lg border border-border bg-muted/20 p-6 space-y-5">
+        <PillSelect
+          label="Side"
+          options={["top", "right", "bottom", "left"] as const}
+          value={side}
+          onChange={setSide}
+        />
+      </div>
 
-<Breadcrumb>
-  <BreadcrumbList>
-    <BreadcrumbItem>
-      <BreadcrumbLink href="/">Beranda</BreadcrumbLink>
-    </BreadcrumbItem>
-    <BreadcrumbSeparator />
-    <BreadcrumbItem>
-      <BreadcrumbLink href="/produk">Produk</BreadcrumbLink>
-    </BreadcrumbItem>
-    <BreadcrumbSeparator />
-    <BreadcrumbItem>
-      <BreadcrumbPage>Detail Produk</BreadcrumbPage>
-    </BreadcrumbItem>
-  </BreadcrumbList>
-</Breadcrumb>`}
-      >
-        <Breadcrumb>
-          <BreadcrumbList>
-            <BreadcrumbItem>
-              <BreadcrumbLink href="#">Beranda</BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbLink href="#">Produk</BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbLink href="#">Elektronik</BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbPage>Laptop Gaming</BreadcrumbPage>
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
-      </ComponentSection>
+      <div className="mt-6 flex min-h-32 items-center justify-center rounded-lg border border-border bg-muted/30 p-8">
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button variant="outline">Arahkan kursor</Button>
+            </TooltipTrigger>
+            <TooltipContent side={side}>
+              <p>Ini adalah tooltip!</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      </div>
 
-      {/* ── Pagination ── */}
-      <ComponentSection
-        title="Pagination"
-        description="Navigasi halaman untuk memisahkan konten berjumlah besar ke dalam beberapa halaman. Mendukung tombol Previous/Next, nomor halaman aktif, dan ellipsis untuk halaman yang disembunyikan."
-        baseComponent="pagination"
-        props={[
-          {
-            prop: "PaginationLink isActive",
-            type: "boolean",
-            default: "false",
-            description: "Tandai sebagai halaman aktif — tampil dengan varian outline",
-          },
-          {
-            prop: "PaginationLink size",
-            type: '"default" | "sm" | "lg" | "icon"',
-            default: '"icon"',
-            description: "Ukuran tombol pagination",
-          },
-        ]}
-        code={`import {
-  Pagination, PaginationContent, PaginationItem,
-  PaginationLink, PaginationPrevious, PaginationNext,
-  PaginationEllipsis,
-} from "@/components/ui/pagination"
+      <div className="mt-6">
+        <h3 className="mb-3 text-sm font-semibold">Kode</h3>
+        <PlaygroundCodeBlock code={code} />
+      </div>
+    </section>
+  )
+}
 
-<Pagination>
-  <PaginationContent>
-    <PaginationItem><PaginationPrevious href="#" /></PaginationItem>
-    <PaginationItem><PaginationLink href="#">1</PaginationLink></PaginationItem>
-    <PaginationItem><PaginationLink href="#" isActive>2</PaginationLink></PaginationItem>
-    <PaginationItem><PaginationLink href="#">3</PaginationLink></PaginationItem>
-    <PaginationItem><PaginationEllipsis /></PaginationItem>
-    <PaginationItem><PaginationLink href="#">10</PaginationLink></PaginationItem>
-    <PaginationItem><PaginationNext href="#" /></PaginationItem>
-  </PaginationContent>
-</Pagination>`}
-      >
-        <Pagination>
-          <PaginationContent>
-            <PaginationItem><PaginationPrevious href="#" /></PaginationItem>
-            <PaginationItem><PaginationLink href="#">1</PaginationLink></PaginationItem>
-            <PaginationItem><PaginationLink href="#" isActive>2</PaginationLink></PaginationItem>
-            <PaginationItem><PaginationLink href="#">3</PaginationLink></PaginationItem>
-            <PaginationItem><PaginationEllipsis /></PaginationItem>
-            <PaginationItem><PaginationLink href="#">10</PaginationLink></PaginationItem>
-            <PaginationItem><PaginationNext href="#" /></PaginationItem>
-          </PaginationContent>
-        </Pagination>
-      </ComponentSection>
+function CalendarInteractive() {
+  const [date, setDate] = useState<Date | undefined>(new Date())
 
-      {/* ── Calendar ── */}
-      <ComponentSection
-        title="Calendar"
-        description="Komponen kalender interaktif berbasis react-day-picker untuk memilih tanggal tunggal, rentang tanggal, atau beberapa tanggal sekaligus. Mendukung navigasi bulan, pemilihan tahun, dan kustomisasi hari yang dinonaktifkan."
-        baseComponent="calendar"
-        props={[
-          {
-            prop: "mode",
-            type: '"single" | "multiple" | "range"',
-            default: "—",
-            description: "Mode pemilihan tanggal",
-          },
-          {
-            prop: "selected",
-            type: "Date | Date[] | DateRange",
-            default: "—",
-            description: "Tanggal yang dipilih saat ini (controlled)",
-          },
-          {
-            prop: "onSelect",
-            type: "(date: Date | undefined) => void",
-            default: "—",
-            description: "Callback dipanggil saat tanggal dipilih",
-          },
-          {
-            prop: "showOutsideDays",
-            type: "boolean",
-            default: "true",
-            description: "Tampilkan hari dari bulan sebelum/sesudah",
-          },
-          {
-            prop: "captionLayout",
-            type: '"label" | "dropdown" | "dropdown-months" | "dropdown-years"',
-            default: '"label"',
-            description: "Tata letak caption navigasi bulan/tahun",
-          },
-          {
-            prop: "disabled",
-            type: "Matcher | Matcher[]",
-            default: "—",
-            description: "Hari atau rentang yang dinonaktifkan",
-          },
-        ]}
-        code={`import { Calendar } from "@/components/ui/calendar"
-import { useState } from "react"
+  const code = `import { Calendar } from "@/components/ui/calendar"
 
 const [date, setDate] = useState<Date | undefined>(new Date())
 
@@ -763,15 +336,46 @@ const [date, setDate] = useState<Date | undefined>(new Date())
   selected={date}
   onSelect={setDate}
   className="rounded-lg border"
-/>`}
-      >
+/>`
+
+  return (
+    <section id="calendar" className="scroll-mt-8 py-10 border-b border-border">
+      <div className="mb-6">
+        <div className="flex items-start gap-3">
+          <div className="flex-1">
+            <h2 className="text-xl font-semibold tracking-tight">Calendar</h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Komponen kalender interaktif untuk memilih tanggal.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div className="mt-6 flex min-h-32 items-center justify-center rounded-lg border border-border bg-muted/30 p-8">
         <Calendar
           mode="single"
-          selected={calendarDate}
-          onSelect={setCalendarDate}
+          selected={date}
+          onSelect={setDate}
           className="rounded-lg border"
         />
-      </ComponentSection>
+      </div>
+
+      <div className="mt-6">
+        <h3 className="mb-3 text-sm font-semibold">Kode</h3>
+        <PlaygroundCodeBlock code={code} />
+      </div>
+    </section>
+  )
+}
+
+export function MoleculesDoc() {
+  return (
+    <div>
+      <SelectInteractive />
+      <AlertInteractive />
+      <ProgressInteractive />
+      <TooltipInteractive />
+      <CalendarInteractive />
     </div>
   )
 }
