@@ -4,6 +4,8 @@ import { cn } from "@/lib/utils"
 import { AtomsDoc } from "@/docs/atoms"
 import { MoleculesDoc } from "@/docs/molecules"
 import { OrganismsDoc } from "@/docs/organisms"
+import { LayoutsDoc } from "@/docs/layouts"
+import { GuidelinesDoc } from "@/docs/guidelines"
 
 // Only items that have a real section rendered in the content area
 const NAV_GROUPS = [
@@ -56,6 +58,26 @@ const NAV_GROUPS = [
       "Command",
       "Sheet",
       "Navigation Menu",
+    ],
+  },
+  {
+    label: "Layouts",
+    items: [
+      "Login Form Layout",
+      "Dashboard Layout",
+      "Product Card Layout",
+      "Navbar + Sidebar Layout",
+      "Table + Filter + Pagination",
+      "Auth Split Layout",
+    ],
+  },
+  {
+    label: "Guidelines",
+    items: [
+      "Primary vs Secondary Button",
+      "Spacing Rules",
+      "Color Usage Limits",
+      "Icon Usage",
     ],
   },
 ]
@@ -240,6 +262,8 @@ export function DocsPage() {
             <AtomsDoc />
             <MoleculesDoc />
             <OrganismsDoc />
+            <LayoutsDoc />
+            <GuidelinesDoc />
           </div>
         </div>
       </main>
