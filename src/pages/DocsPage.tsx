@@ -65,6 +65,7 @@ const NAV_GROUPS = [
     label: "Organisms",
     items: [
       "Accordion",
+      "Data Table",
       "Dialog",
       "Drawer",
       "Card",
@@ -80,6 +81,7 @@ const NAV_GROUPS = [
     items: [
       "Playground",
       "Element Playground",
+      "Data Table Playground",
     ]
   }
 ]
