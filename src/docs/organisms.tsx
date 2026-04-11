@@ -27,6 +27,10 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import {
+  DashboardSidebar,
+  type DashboardSidebarItemId,
+} from "@/components/organism/sidebar"
 
 function PlaygroundCodeBlock({ code }: { code: string }) {
   const [copied, setCopied] = useState(false)
@@ -372,6 +376,60 @@ function DrawerInteractive() {
   )
 }
 
+function SidebarInteractive() {
+  const [activeItem, setActiveItem] = useState<DashboardSidebarItemId>("dashboard")
+
+  const code = `import { DashboardSidebar } from "@ani-ui/anis"
+
+function Example() {
+  const [activeItem, setActiveItem] = useState("dashboard")
+
+  return (
+    <DashboardSidebar
+      activeItem={activeItem}
+      onItemClick={(item) => setActiveItem(item)}
+      onCollapse={() => console.log("collapse sidebar")}
+    />
+  )
+}`
+
+  return (
+    <section id="sidebar" className="scroll-mt-8 py-10 border-b border-border">
+      <div className="mb-6">
+        <div className="flex items-start gap-3">
+          <div className="flex-1">
+            <h2 className="text-xl font-semibold tracking-tight">Sidebar</h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Sidebar dashboard siap pakai berbasis komponen `ui` (Button dan
+              Separator) dengan state aktif dan aksi collapse.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div className="rounded-lg border border-border bg-muted/20 p-6 space-y-3">
+        <span className="text-xs uppercase tracking-wider text-muted-foreground">
+          Active Item
+        </span>
+        <p className="text-sm font-medium text-foreground">{activeItem}</p>
+      </div>
+
+      <div className="mt-6 rounded-lg border border-border bg-zinc-900/95 p-5">
+        <DashboardSidebar
+          activeItem={activeItem}
+          onItemClick={setActiveItem}
+          className="min-h-[536px] border-[#D6D7DA] shadow-sm"
+        />
+      </div>
+
+      <div className="mt-6">
+        <h3 className="mb-3 text-sm font-semibold">Kode</h3>
+        <PlaygroundCodeBlock code={code} />
+      </div>
+    </section>
+  )
+}
+
 export function OrganismsDoc() {
   return (
     <div>
@@ -379,6 +437,7 @@ export function OrganismsDoc() {
       <TabsInteractive />
       <SheetInteractive />
       <DrawerInteractive />
+      <SidebarInteractive />
     </div>
   )
 }

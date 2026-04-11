@@ -53,6 +53,7 @@ export * from "./components/ui/textarea"
 export * from "./components/ui/toggle"
 export * from "./components/ui/toggle-group"
 export * from "./components/ui/tooltip"
+export * from "./components/organism/sidebar"
 
 export * from "./hooks/use-mobile"
 export * from "./hooks/useBreakpoint"

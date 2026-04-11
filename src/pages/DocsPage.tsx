@@ -66,14 +66,10 @@ const NAV_GROUPS = [
     label: "Organisms",
     items: [
       "Accordion",
-      "Dialog",
-      "Drawer",
-      "Card",
-      "Table",
       "Tabs",
-      "Command",
       "Sheet",
-      "Navigation Menu",
+      "Drawer",
+      "Sidebar",
     ],
   },
   {
