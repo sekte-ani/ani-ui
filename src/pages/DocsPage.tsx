@@ -23,7 +23,6 @@ const NAV_GROUPS = [
       "Text Shadow",
       "Icon Style",
     ],
-
   },
   {
     label: "Atoms",
@@ -50,15 +49,9 @@ const NAV_GROUPS = [
     label: "Molecules",
     items: [
       "Select",
-      "Field",
       "Alert",
-      "Sonner",
       "Tooltip",
-      "Hover Card",
-      "Popover",
       "Progress",
-      "Breadcrumb",
-      "Pagination",
       "Calendar",
     ],
   },
@@ -67,10 +60,6 @@ const NAV_GROUPS = [
     items: [
       "Accordion",
       "Data Table",
-      "Dialog",
-      "Drawer",
-      "Card",
-      "Table",
       "Tabs",
       "Sheet",
       "Drawer",
@@ -80,11 +69,23 @@ const NAV_GROUPS = [
   {
     label: "Layouts",
     items: [
-      "Playground",
-      "Element Playground",
-      "Data Table Playground",
-    ]
-  }
+      "Login Form Layout",
+      "Dashboard Layout",
+      "Product Card Layout",
+      "Navbar + Sidebar Layout",
+      "Table + Filter + Pagination",
+      "Auth Split Layout",
+    ],
+  },
+  {
+    label: "Guidelines",
+    items: [
+      "Primary vs Secondary Button",
+      "Spacing Rules",
+      "Color Usage Limits",
+      "Icon Usage",
+    ],
+  },
 ]
 
 const ALL_ITEMS = NAV_GROUPS.flatMap((g) => g.items)
