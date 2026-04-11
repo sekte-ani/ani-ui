@@ -820,7 +820,7 @@ function AtomsPlayground() {
 // ── Data Table Playground ────────────────────────────────────────────────────
 // ══════════════════════════════════════════════════════════════════════════════
 
-interface PlaygroundProduct {
+interface PlaygroundProduct extends Record<string, unknown> {
   key: string
   product: string
   category: string
@@ -878,7 +878,7 @@ function DataTablePlayground() {
       key: "price",
       align: "right" as const,
       ...(enableSort ? { sorter: (a: PlaygroundProduct, b: PlaygroundProduct) => a.price - b.price } : {}),
-      render: (value: number) => `$${value.toFixed(2)}`,
+      render: (value) => (typeof value === "number" ? `$${value.toFixed(2)}` : "â€”"),
     },
     {
       title: "Stock",
@@ -898,11 +898,17 @@ function DataTablePlayground() {
         ],
         onFilter: (value: string | number | boolean, record: PlaygroundProduct) => record.status === value,
       } : {}),
-      render: (value: string) => (
-        <Badge variant={value === "In Stock" ? "default" : "secondary"} className="text-xs">
-          {value}
-        </Badge>
-      ),
+      render: (value) => {
+        const status = typeof value === "string" ? value : ""
+        return (
+          <Badge
+            variant={status === "In Stock" ? "default" : "secondary"}
+            className="text-xs"
+          >
+            {status || "â€”"}
+          </Badge>
+        )
+      },
     },
   ], [enableSort, enableFilter])
 

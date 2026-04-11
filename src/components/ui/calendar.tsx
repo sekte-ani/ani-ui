@@ -192,6 +192,10 @@ function CalendarDayButton({
     if (modifiers.focused) ref.current?.focus()
   }, [modifiers.focused])
 
+  const { color: _color, ...buttonProps } = props as React.ComponentProps<"button"> & {
+    color?: string
+  }
+
   return (
     <Button
       ref={ref}
@@ -212,7 +216,7 @@ function CalendarDayButton({
         defaultClassNames.day,
         className
       )}
-      {...props}
+      {...buttonProps}
     />
   )
 }

@@ -9,7 +9,8 @@ import {
 } from "@/components/ui/accordion"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { DataTable, type ColumnType, type ColumnDef } from "@/components/organism/data-table"
+import { DataTable, type ColumnType } from "@/components/organism/data-table"
+import { Header } from "@/components/organism/header"
 import {
   Drawer,
   DrawerClose,
@@ -88,6 +89,94 @@ function PillSelect<T extends string>({
         ))}
       </div>
     </div>
+  )
+}
+
+function HeaderInteractive() {
+  const [showBadge, setShowBadge] = useState(true)
+  const [showMenu, setShowMenu] = useState(false)
+
+  const code = `import { Header } from "@/components/organism/header"
+
+<Header
+  title="ANI UI"
+  badge="${showBadge ? "Beta" : ""}"
+  nav={[
+    { label: "Docs", href: "#", active: true },
+    { label: "Components", href: "#" },
+    { label: "Changelog", href: "#" },
+  ]}
+  user={{ name: "Anis", avatarFallback: "AN" }}
+  ${showMenu ? "onMenuClick={() => console.log(\"menu\")}\n  " : ""}searchPlaceholder="Cari..."
+/>`
+
+  return (
+    <section id="header" className="scroll-mt-8 py-10 border-b border-border">
+      <div className="mb-6">
+        <div className="flex items-start gap-3">
+          <div className="flex-1">
+            <h2 className="text-xl font-semibold tracking-tight">Header</h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Header sederhana untuk navigasi, pencarian, notifikasi, dan menu akun.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div className="rounded-lg border border-border bg-muted/20 p-6 space-y-5">
+        <div className="flex flex-wrap gap-4">
+          <div>
+            <span className="mb-2 block text-xs font-medium text-muted-foreground uppercase tracking-wider">Badge</span>
+            <button
+              onClick={() => setShowBadge(!showBadge)}
+              className={cn(
+                "rounded-md px-3 py-1.5 text-xs font-medium transition-all border",
+                showBadge
+                  ? "bg-primary text-primary-foreground border-primary shadow-sm"
+                  : "bg-muted/40 text-muted-foreground border-border hover:bg-accent hover:text-accent-foreground"
+              )}
+            >
+              {showBadge ? "On" : "Off"}
+            </button>
+          </div>
+          <div>
+            <span className="mb-2 block text-xs font-medium text-muted-foreground uppercase tracking-wider">Mobile Menu</span>
+            <button
+              onClick={() => setShowMenu(!showMenu)}
+              className={cn(
+                "rounded-md px-3 py-1.5 text-xs font-medium transition-all border",
+                showMenu
+                  ? "bg-primary text-primary-foreground border-primary shadow-sm"
+                  : "bg-muted/40 text-muted-foreground border-border hover:bg-accent hover:text-accent-foreground"
+              )}
+            >
+              {showMenu ? "On" : "Off"}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div className="mt-6 rounded-lg border border-border bg-background overflow-hidden">
+        <Header
+          className="static bg-background"
+          title="ANI UI"
+          badge={showBadge ? "Beta" : ""}
+          nav={[
+            { label: "Docs", href: "#", active: true },
+            { label: "Components", href: "#" },
+            { label: "Changelog", href: "#" },
+          ]}
+          user={{ name: "Anis", avatarFallback: "AN" }}
+          onMenuClick={showMenu ? () => {} : undefined}
+          searchPlaceholder="Cari..."
+        />
+      </div>
+
+      <div className="mt-6">
+        <h3 className="mb-3 text-sm font-semibold">Kode</h3>
+        <PlaygroundCodeBlock code={code} />
+      </div>
+    </section>
   )
 }
 
@@ -376,7 +465,7 @@ function DrawerInteractive() {
 
 // ── DataTable demo data ──────────────────────────────────────────────────────
 
-interface DemoUser {
+interface DemoUser extends Record<string, unknown> {
   key: string
   name: string
   age: number
@@ -419,15 +508,18 @@ const DEMO_COLUMNS: ColumnType<DemoUser>[] = [
     title: "Tags",
     dataIndex: "tags",
     key: "tags",
-    render: (tags: string[]) => (
-      <div className="flex gap-1">
-        {tags.map((tag) => (
-          <Badge key={tag} variant="secondary" className="text-xs">
-            {tag}
-          </Badge>
-        ))}
-      </div>
-    ),
+    render: (value) => {
+      const tags = Array.isArray(value) ? (value as string[]) : []
+      return (
+        <div className="flex gap-1">
+          {tags.map((tag) => (
+            <Badge key={tag} variant="secondary" className="text-xs">
+              {tag}
+            </Badge>
+          ))}
+        </div>
+      )
+    },
   },
 ]
 
@@ -580,6 +672,7 @@ const data: User[] = [
 export function OrganismsDoc() {
   return (
     <div>
+      <HeaderInteractive />
       <AccordionInteractive />
       <DataTableInteractive />
       <TabsInteractive />

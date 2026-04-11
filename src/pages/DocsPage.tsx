@@ -65,6 +65,7 @@ const NAV_GROUPS = [
   {
     label: "Organisms",
     items: [
+      "Header",
       "Accordion",
       "Data Table",
       "Dialog",
