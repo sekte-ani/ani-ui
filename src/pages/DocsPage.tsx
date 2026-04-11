@@ -6,6 +6,7 @@ import { FoundationDoc } from "@/docs/foundation"
 import { AtomsDoc } from "@/docs/atoms"
 import { MoleculesDoc } from "@/docs/molecules"
 import { OrganismsDoc } from "@/docs/organisms"
+import { PlaygroundDoc } from "@/docs/playground"
 import { LayoutsDoc } from "@/docs/layouts"
 import { GuidelinesDoc } from "@/docs/guidelines"
 
@@ -23,7 +24,6 @@ const NAV_GROUPS = [
       "Text Shadow",
       "Icon Style",
     ],
-
   },
   {
     label: "Atoms",
@@ -50,15 +50,9 @@ const NAV_GROUPS = [
     label: "Molecules",
     items: [
       "Select",
-      "Field",
       "Alert",
-      "Sonner",
       "Tooltip",
-      "Hover Card",
-      "Popover",
       "Progress",
-      "Breadcrumb",
-      "Pagination",
       "Calendar",
     ],
   },
@@ -68,14 +62,10 @@ const NAV_GROUPS = [
       "Header",
       "Accordion",
       "Data Table",
-      "Dialog",
-      "Drawer",
-      "Card",
-      "Table",
       "Tabs",
-      "Command",
       "Sheet",
-      "Navigation Menu",
+      "Drawer",
+      "Sidebar",
     ],
   },
   {
@@ -84,8 +74,17 @@ const NAV_GROUPS = [
       "Playground",
       "Element Playground",
       "Data Table Playground",
-    ]
-  }
+    ],
+  },
+  {
+    label: "Guidelines",
+    items: [
+      "Primary vs Secondary Button",
+      "Spacing Rules",
+      "Color Usage Limits",
+      "Icon Usage",
+    ],
+  },
 ]
 
 const ALL_ITEMS = NAV_GROUPS.flatMap((g) => g.items)
@@ -269,6 +268,7 @@ export function DocsPage() {
             <AtomsDoc />
             <MoleculesDoc />
             <OrganismsDoc />
+            <PlaygroundDoc />
             <LayoutsDoc />
             <GuidelinesDoc />
           </div>
