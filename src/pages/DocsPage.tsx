@@ -66,6 +66,11 @@ const NAV_GROUPS = [
     label: "Organisms",
     items: [
       "Accordion",
+      "Data Table",
+      "Dialog",
+      "Drawer",
+      "Card",
+      "Table",
       "Tabs",
       "Sheet",
       "Drawer",
@@ -75,23 +80,11 @@ const NAV_GROUPS = [
   {
     label: "Layouts",
     items: [
-      "Login Form Layout",
-      "Dashboard Layout",
-      "Product Card Layout",
-      "Navbar + Sidebar Layout",
-      "Table + Filter + Pagination",
-      "Auth Split Layout",
-    ],
-  },
-  {
-    label: "Guidelines",
-    items: [
-      "Primary vs Secondary Button",
-      "Spacing Rules",
-      "Color Usage Limits",
-      "Icon Usage",
-    ],
-  },
+      "Playground",
+      "Element Playground",
+      "Data Table Playground",
+    ]
+  }
 ]
 
 const ALL_ITEMS = NAV_GROUPS.flatMap((g) => g.items)

@@ -7,7 +7,9 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion"
+import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { DataTable, type ColumnType, type ColumnDef } from "@/components/organism/data-table"
 import {
   Drawer,
   DrawerClose,
@@ -376,6 +378,209 @@ function DrawerInteractive() {
   )
 }
 
+// ── DataTable demo data ──────────────────────────────────────────────────────
+
+interface DemoUser {
+  key: string
+  name: string
+  age: number
+  address: string
+  tags: string[]
+}
+
+const DEMO_COLUMNS: ColumnType<DemoUser>[] = [
+  {
+    title: "Name",
+    dataIndex: "name",
+    key: "name",
+    sorter: (a, b) => a.name.localeCompare(b.name),
+    filters: [
+      { text: "John", value: "John" },
+      { text: "Jim", value: "Jim" },
+      { text: "Joe", value: "Joe" },
+    ],
+    onFilter: (value, record) => record.name.includes(value as string),
+  },
+  {
+    title: "Age",
+    dataIndex: "age",
+    key: "age",
+    sorter: (a, b) => a.age - b.age,
+    align: "right" as const,
+  },
+  {
+    title: "Address",
+    dataIndex: "address",
+    key: "address",
+    filters: [
+      { text: "New York", value: "New York" },
+      { text: "London", value: "London" },
+      { text: "Sydney", value: "Sydney" },
+    ],
+    onFilter: (value, record) => record.address.includes(value as string),
+  },
+  {
+    title: "Tags",
+    dataIndex: "tags",
+    key: "tags",
+    render: (tags: string[]) => (
+      <div className="flex gap-1">
+        {tags.map((tag) => (
+          <Badge key={tag} variant="secondary" className="text-xs">
+            {tag}
+          </Badge>
+        ))}
+      </div>
+    ),
+  },
+]
+
+const DEMO_DATA: DemoUser[] = [
+  { key: "1", name: "John Brown", age: 32, address: "New York No. 1 Lake Park", tags: ["nice", "developer"] },
+  { key: "2", name: "Jim Green", age: 42, address: "London No. 1 Lake Park", tags: ["cool"] },
+  { key: "3", name: "Joe Black", age: 32, address: "Sydney No. 1 Lake Park", tags: ["teacher"] },
+  { key: "4", name: "Jim Red", age: 28, address: "London No. 2 Lake Park", tags: ["designer"] },
+]
+
+function DataTableInteractive() {
+  const [selection, setSelection] = useState<"none" | "checkbox" | "radio">("checkbox")
+  const [tableSize, setTableSize] = useState<"sm" | "default" | "lg">("default")
+  const [isBordered, setIsBordered] = useState(false)
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
+
+  const rowSelection =
+    selection === "none"
+      ? undefined
+      : {
+          type: selection as "checkbox" | "radio",
+          selectedRowKeys,
+          onChange: (keys: React.Key[]) => setSelectedRowKeys(keys),
+        }
+
+  const code = `import { DataTable, type ColumnType } from "@/components/organism/data-table"
+import { Badge } from "@/components/ui/badge"
+
+interface User {
+  key: string
+  name: string
+  age: number
+  address: string
+  tags: string[]
+}
+
+const columns: ColumnType<User>[] = [
+  {
+    title: "Name",
+    dataIndex: "name",
+    key: "name",
+    sorter: (a, b) => a.name.localeCompare(b.name),
+    filters: [
+      { text: "John", value: "John" },
+      { text: "Jim", value: "Jim" },
+    ],
+    onFilter: (value, record) => record.name.includes(value as string),
+  },
+  {
+    title: "Age",
+    dataIndex: "age",
+    key: "age",
+    sorter: (a, b) => a.age - b.age,
+    align: "right",
+  },
+  { title: "Address", dataIndex: "address", key: "address" },
+  {
+    title: "Tags",
+    dataIndex: "tags",
+    key: "tags",
+    render: (tags: string[]) => (
+      <div className="flex gap-1">
+        {tags.map((tag) => (
+          <Badge key={tag} variant="secondary">{tag}</Badge>
+        ))}
+      </div>
+    ),
+  },
+]
+
+const data: User[] = [
+  { key: "1", name: "John Brown", age: 32, address: "New York", tags: ["nice"] },
+  { key: "2", name: "Jim Green", age: 42, address: "London", tags: ["cool"] },
+]
+
+<DataTable<User>
+  dataSource={data}
+  columns={columns}${selection !== "none" ? `\n  rowSelection={{ type: "${selection}" }}` : ""}${tableSize !== "default" ? `\n  size="${tableSize}"` : ""}${isBordered ? `\n  bordered` : ""}
+/>`
+
+  return (
+    <section id="data-table" className="scroll-mt-8 py-10 border-b border-border">
+      <div className="mb-6">
+        <div className="flex items-start gap-3">
+          <div className="flex-1">
+            <h2 className="text-xl font-semibold tracking-tight">Data Table</h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              A configurable data table with sorting, filtering, and row selection.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div className="rounded-lg border border-border bg-muted/20 p-6 space-y-5">
+        <PillSelect
+          label="Selection"
+          options={["none", "checkbox", "radio"] as const}
+          value={selection}
+          onChange={setSelection}
+        />
+        <PillSelect
+          label="Size"
+          options={["sm", "default", "lg"] as const}
+          value={tableSize}
+          onChange={setTableSize}
+        />
+        <div>
+          <span className="mb-2 block text-xs font-medium text-muted-foreground uppercase tracking-wider">Bordered</span>
+          <button
+            onClick={() => setIsBordered(!isBordered)}
+            className={cn(
+              "rounded-md px-3 py-1.5 text-xs font-medium transition-all border",
+              isBordered
+                ? "bg-primary text-primary-foreground border-primary shadow-sm"
+                : "bg-muted/40 text-muted-foreground border-border hover:bg-accent hover:text-accent-foreground"
+            )}
+          >
+            {isBordered ? "Yes" : "No"}
+          </button>
+        </div>
+      </div>
+
+      {selectedRowKeys.length > 0 && (
+        <div className="mt-4 flex items-center gap-2 text-sm text-muted-foreground">
+          <span>Selected {selectedRowKeys.length} item{selectedRowKeys.length > 1 ? "s" : ""}</span>
+          <Button variant="ghost" size="sm" className="h-6 text-xs" onClick={() => setSelectedRowKeys([])}>
+            Clear
+          </Button>
+        </div>
+      )}
+
+      <div className="mt-6 rounded-lg border border-border bg-muted/30 p-4">
+        <DataTable<DemoUser>
+          dataSource={DEMO_DATA}
+          columns={DEMO_COLUMNS}
+          rowSelection={rowSelection}
+          size={tableSize}
+          bordered={isBordered}
+        />
+      </div>
+
+      <div className="mt-6">
+        <h3 className="mb-3 text-sm font-semibold">Kode</h3>
+        <PlaygroundCodeBlock code={code} />
+      </div>
+    </section>
+  )
+}
+
 function SidebarInteractive() {
   const [activeItem, setActiveItem] = useState<DashboardSidebarItemId>("dashboard")
 
@@ -434,6 +639,7 @@ export function OrganismsDoc() {
   return (
     <div>
       <AccordionInteractive />
+      <DataTableInteractive />
       <TabsInteractive />
       <SheetInteractive />
       <DrawerInteractive />

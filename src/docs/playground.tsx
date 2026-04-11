@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useMemo } from "react"
 import { CheckIcon, CopyIcon, BoldIcon } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { hexColorMap, colorClassMap, bgColorClassMap, COLOR_TOKENS, type ColorToken } from "@/components/ui/color-palette.variants"
@@ -6,6 +6,8 @@ import { type TrackingToken } from "@/components/ui/spacing.variants"
 import { SHADOW_TOKENS, shadowClassMap, type ShadowToken } from "@/components/ui/shadow.variants"
 import { RADIUS_TOKENS, radiusClassMap, type RadiusToken } from "@/components/ui/border-radius.variants"
 import { TEXT_SHADOW_TOKENS, textShadowClassMap, type TextShadowToken } from "@/components/ui/text-shadow.variants"
+import { DataTable, type ColumnType } from "@/components/organism/data-table"
+import { Badge } from "@/components/ui/badge"
 import {
   Heading1,
   Heading2,
@@ -16,7 +18,6 @@ import {
   Text,
   SmallText,
 } from "@/components/ui/typography"
-import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Input } from "@/components/ui/input"
@@ -815,6 +816,260 @@ function AtomsPlayground() {
   )
 }
 
+// ══════════════════════════════════════════════════════════════════════════════
+// ── Data Table Playground ────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════════════════════
+
+interface PlaygroundProduct {
+  key: string
+  product: string
+  category: string
+  price: number
+  stock: number
+  status: string
+}
+
+const PLAYGROUND_TABLE_DATA: PlaygroundProduct[] = [
+  { key: "1", product: "Wireless Headphones", category: "Electronics", price: 59.99, stock: 143, status: "In Stock" },
+  { key: "2", product: "Running Shoes", category: "Sportswear", price: 89.00, stock: 67, status: "In Stock" },
+  { key: "3", product: "Coffee Maker", category: "Appliances", price: 129.99, stock: 0, status: "Out of Stock" },
+  { key: "4", product: "Desk Lamp", category: "Furniture", price: 34.50, stock: 210, status: "In Stock" },
+  { key: "5", product: "Yoga Mat", category: "Sportswear", price: 24.99, stock: 88, status: "In Stock" },
+  { key: "6", product: "Bluetooth Speaker", category: "Electronics", price: 45.00, stock: 0, status: "Out of Stock" },
+  { key: "7", product: "Notebook Set", category: "Stationery", price: 12.99, stock: 350, status: "In Stock" },
+  { key: "8", product: "Water Bottle", category: "Accessories", price: 18.50, stock: 195, status: "In Stock" },
+]
+
+function DataTablePlayground() {
+  const [selection, setSelection] = useState<"none" | "checkbox" | "radio">("none")
+  const [tableSize, setTableSize] = useState<"sm" | "default" | "lg">("default")
+  const [isBordered, setIsBordered] = useState(false)
+  const [enableSort, setEnableSort] = useState(true)
+  const [enableFilter, setEnableFilter] = useState(true)
+  const [showEmpty, setShowEmpty] = useState(false)
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
+
+  const columns = useMemo<ColumnType<PlaygroundProduct>[]>(() => [
+    {
+      title: "Product",
+      dataIndex: "product",
+      key: "product",
+      ...(enableSort ? { sorter: (a: PlaygroundProduct, b: PlaygroundProduct) => a.product.localeCompare(b.product) } : {}),
+    },
+    {
+      title: "Category",
+      dataIndex: "category",
+      key: "category",
+      ...(enableFilter ? {
+        filters: [
+          { text: "Electronics", value: "Electronics" },
+          { text: "Sportswear", value: "Sportswear" },
+          { text: "Appliances", value: "Appliances" },
+          { text: "Furniture", value: "Furniture" },
+          { text: "Stationery", value: "Stationery" },
+          { text: "Accessories", value: "Accessories" },
+        ],
+        onFilter: (value: string | number | boolean, record: PlaygroundProduct) => record.category === value,
+      } : {}),
+    },
+    {
+      title: "Price",
+      dataIndex: "price",
+      key: "price",
+      align: "right" as const,
+      ...(enableSort ? { sorter: (a: PlaygroundProduct, b: PlaygroundProduct) => a.price - b.price } : {}),
+      render: (value: number) => `$${value.toFixed(2)}`,
+    },
+    {
+      title: "Stock",
+      dataIndex: "stock",
+      key: "stock",
+      align: "right" as const,
+      ...(enableSort ? { sorter: (a: PlaygroundProduct, b: PlaygroundProduct) => a.stock - b.stock } : {}),
+    },
+    {
+      title: "Status",
+      dataIndex: "status",
+      key: "status",
+      ...(enableFilter ? {
+        filters: [
+          { text: "In Stock", value: "In Stock" },
+          { text: "Out of Stock", value: "Out of Stock" },
+        ],
+        onFilter: (value: string | number | boolean, record: PlaygroundProduct) => record.status === value,
+      } : {}),
+      render: (value: string) => (
+        <Badge variant={value === "In Stock" ? "default" : "secondary"} className="text-xs">
+          {value}
+        </Badge>
+      ),
+    },
+  ], [enableSort, enableFilter])
+
+  const rowSelection =
+    selection === "none"
+      ? undefined
+      : {
+          type: selection as "checkbox" | "radio",
+          selectedRowKeys,
+          onChange: (keys: React.Key[]) => setSelectedRowKeys(keys),
+        }
+
+  const code = `import { DataTable, type ColumnType } from "@/components/organism/data-table"
+
+interface Product {
+  key: string
+  product: string
+  category: string
+  price: number
+  stock: number
+  status: string
+}
+
+const columns: ColumnType<Product>[] = [
+  {
+    title: "Product",
+    dataIndex: "product",
+    key: "product",${enableSort ? '\n    sorter: (a, b) => a.product.localeCompare(b.product),' : ''}
+  },
+  {
+    title: "Category",
+    dataIndex: "category",
+    key: "category",${enableFilter ? `\n    filters: [
+      { text: "Electronics", value: "Electronics" },
+      { text: "Sportswear", value: "Sportswear" },
+    ],
+    onFilter: (value, record) => record.category === value,` : ''}
+  },
+  {
+    title: "Price",
+    dataIndex: "price",
+    key: "price",
+    align: "right",${enableSort ? '\n    sorter: (a, b) => a.price - b.price,' : ''}
+    render: (value) => \`$\${value.toFixed(2)}\`,
+  },
+  { title: "Stock", dataIndex: "stock", key: "stock", align: "right" },
+  { title: "Status", dataIndex: "status", key: "status" },
+]
+
+<DataTable<Product>
+  dataSource={data}
+  columns={columns}${selection !== "none" ? `\n  rowSelection={{ type: "${selection}" }}` : ""}${tableSize !== "default" ? `\n  size="${tableSize}"` : ""}${isBordered ? "\n  bordered" : ""}
+/>`
+
+  return (
+    <section id="data-table-playground" className="scroll-mt-8 py-10 border-b border-border">
+      <div className="mb-6">
+        <div className="flex items-start gap-3">
+          <div className="flex-1">
+            <h2 className="text-xl font-semibold tracking-tight">Data Table Playground</h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Try different configurations for the DataTable component.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Controls */}
+      <div className="rounded-lg border border-border bg-muted/20 p-6 space-y-5">
+        <PillSelect
+          label="Selection"
+          options={["none", "checkbox", "radio"] as const}
+          value={selection}
+          onChange={(v) => { setSelection(v); setSelectedRowKeys([]) }}
+        />
+        <PillSelect
+          label="Size"
+          options={["sm", "default", "lg"] as const}
+          value={tableSize}
+          onChange={setTableSize}
+        />
+        <div className="flex flex-wrap gap-6">
+          <div>
+            <span className="mb-2 block text-xs font-medium text-muted-foreground uppercase tracking-wider">Bordered</span>
+            <button
+              onClick={() => setIsBordered(!isBordered)}
+              className={cn(
+                "rounded-md px-3 py-1.5 text-xs font-medium transition-all border",
+                isBordered
+                  ? "bg-primary text-primary-foreground border-primary shadow-sm"
+                  : "bg-muted/40 text-muted-foreground border-border hover:bg-accent hover:text-accent-foreground"
+              )}
+            >
+              {isBordered ? "Yes" : "No"}
+            </button>
+          </div>
+          <div>
+            <span className="mb-2 block text-xs font-medium text-muted-foreground uppercase tracking-wider">Sorting</span>
+            <button
+              onClick={() => setEnableSort(!enableSort)}
+              className={cn(
+                "rounded-md px-3 py-1.5 text-xs font-medium transition-all border",
+                enableSort
+                  ? "bg-primary text-primary-foreground border-primary shadow-sm"
+                  : "bg-muted/40 text-muted-foreground border-border hover:bg-accent hover:text-accent-foreground"
+              )}
+            >
+              {enableSort ? "On" : "Off"}
+            </button>
+          </div>
+          <div>
+            <span className="mb-2 block text-xs font-medium text-muted-foreground uppercase tracking-wider">Filtering</span>
+            <button
+              onClick={() => setEnableFilter(!enableFilter)}
+              className={cn(
+                "rounded-md px-3 py-1.5 text-xs font-medium transition-all border",
+                enableFilter
+                  ? "bg-primary text-primary-foreground border-primary shadow-sm"
+                  : "bg-muted/40 text-muted-foreground border-border hover:bg-accent hover:text-accent-foreground"
+              )}
+            >
+              {enableFilter ? "On" : "Off"}
+            </button>
+          </div>
+          <div>
+            <span className="mb-2 block text-xs font-medium text-muted-foreground uppercase tracking-wider">Empty State</span>
+            <button
+              onClick={() => setShowEmpty(!showEmpty)}
+              className={cn(
+                "rounded-md px-3 py-1.5 text-xs font-medium transition-all border",
+                showEmpty
+                  ? "bg-primary text-primary-foreground border-primary shadow-sm"
+                  : "bg-muted/40 text-muted-foreground border-border hover:bg-accent hover:text-accent-foreground"
+              )}
+            >
+              {showEmpty ? "Yes" : "No"}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {selectedRowKeys.length > 0 && (
+        <div className="mt-4 text-sm text-muted-foreground">
+          Selected {selectedRowKeys.length} row{selectedRowKeys.length > 1 ? "s" : ""}
+        </div>
+      )}
+
+      {/* Live preview */}
+      <div className="mt-6 rounded-lg border border-border bg-muted/30 p-4">
+        <DataTable<PlaygroundProduct>
+          dataSource={showEmpty ? [] : PLAYGROUND_TABLE_DATA}
+          columns={columns}
+          rowSelection={rowSelection}
+          size={tableSize}
+          bordered={isBordered}
+        />
+      </div>
+
+      {/* Code */}
+      <div className="mt-6">
+        <h3 className="mb-3 text-sm font-semibold">Kode</h3>
+        <PlaygroundCodeBlock code={code} />
+      </div>
+    </section>
+  )
+}
+
 // ── Atom card wrapper ─────────────────────────────────────────────────────────
 
 function AtomCard({ title, children }: { title: string; children: React.ReactNode }) {
@@ -836,6 +1091,7 @@ export function PlaygroundDoc() {
       <TypographyPlayground />
       <ElementPlayground />
       <AtomsPlayground />
+      <DataTablePlayground />
     </div>
   )
 }
